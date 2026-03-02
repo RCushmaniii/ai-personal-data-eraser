@@ -1,0 +1,74 @@
+id: mylife
+name: MyLife
+domain: mylife.com
+category: people_search
+difficulty: very_hard
+estimatedDays: 45
+legalFrameworks: [ccpa, generic]
+requiresVerification: true
+searchUrl: https://www.mylife.com/{{firstName}}-{{lastName}}
+optOutUrl: https://www.mylife.com/ccpa/index
+optOutMethods: [web_form, email, phone]
+notes: >
+  Known for being extremely difficult to remove from. May require multiple follow-ups.
+  Phone verification is often required. CCPA requests via email recommended as backup.
+  Has been subject to FTC complaints for aggressive practices.
+
+steps:
+  search:
+    - name: Navigate to profile search
+      action:
+        type: navigate
+        url: https://www.mylife.com/{{firstName}}-{{lastName}}
+      onFailure: abort
+
+    - name: Analyze for matching profiles
+      action:
+        type: ai_analyze
+        prompt: "Search for profile matches. MyLife often shows 'reputation scores' — note any profiles matching the target person."
+      onFailure: abort
+
+  optOut:
+    - name: Navigate to CCPA portal
+      action:
+        type: navigate
+        url: https://www.mylife.com/ccpa/index
+      onFailure: abort
+
+    - name: Fill CCPA deletion form
+      action:
+        type: fill_form
+        fields:
+          firstName: "{{firstName}}"
+          lastName: "{{lastName}}"
+          email: "{{email}}"
+          state: "{{state}}"
+      onFailure: abort
+
+    - name: Handle CAPTCHA
+      action:
+        type: captcha
+        handler: manual
+      onFailure: abort
+
+    - name: Submit CCPA request
+      action:
+        type: click
+        selector: "#ccpa-submit"
+      onFailure: retry
+      maxRetries: 3
+
+    - name: Send CCPA email as backup
+      action:
+        type: send_email
+        template: ccpa_delete
+        to: privacy@mylife.com
+        description: Send formal CCPA deletion request email
+      onFailure: skip
+
+  verify:
+    - name: Verify removal after waiting period
+      action:
+        type: verify_removal
+        checkUrl: https://www.mylife.com/{{firstName}}-{{lastName}}
+      onFailure: abort

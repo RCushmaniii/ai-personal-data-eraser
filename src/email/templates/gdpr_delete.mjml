@@ -1,0 +1,53 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Arial, sans-serif" />
+      <mj-text font-size="14px" color="#333333" line-height="1.6" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#f4f4f4">
+    <mj-section background-color="#ffffff" padding="30px">
+      <mj-column>
+        <mj-text font-size="18px" font-weight="bold" color="#1a1a2e">
+          Right to Erasure Request Under GDPR
+        </mj-text>
+        <mj-text color="#666666" font-size="12px">
+          Request ID: {{requestId}}
+        </mj-text>
+        <mj-divider border-color="#e0e0e0" />
+        <mj-text>
+          To: The Data Protection Officer at {{brokerDomain}}
+        </mj-text>
+        <mj-text>
+          I am writing to exercise my right to erasure ("right to be forgotten") as provided under Article 17 of the General Data Protection Regulation (EU) 2016/679 (GDPR).
+        </mj-text>
+        <mj-text>
+          I request that <strong>{{brokerName}}</strong> erase all personal data it holds concerning me without undue delay. This includes but is not limited to:
+        </mj-text>
+        <mj-text padding-left="20px" color="#555555">
+          {{piiFields}}
+        </mj-text>
+        <mj-text>
+          Profile reference: {{profileUrl}}
+        </mj-text>
+        <mj-text>
+          Under GDPR Article 17(1), the data subject shall have the right to obtain from the controller the erasure of personal data concerning him or her without undue delay where the personal data are no longer necessary in relation to the purposes for which they were collected, or where the data subject withdraws consent.
+        </mj-text>
+        <mj-text>
+          Under Article 12(3), the controller shall provide information on action taken without undue delay and in any event within one month of receipt of the request.
+        </mj-text>
+        <mj-text font-weight="bold">
+          Please confirm erasure by {{deadline}} (30 days as required by GDPR Art. 12(3)).
+        </mj-text>
+        <mj-divider border-color="#e0e0e0" />
+        <mj-text>
+          {{senderName}}<br />
+          {{senderEmail}}
+        </mj-text>
+        <mj-text color="#999999" font-size="11px">
+          {{legalReference}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

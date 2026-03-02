@@ -1,0 +1,44 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Arial, sans-serif" />
+      <mj-text font-size="14px" color="#333333" line-height="1.6" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#f4f4f4">
+    <mj-section background-color="#ffffff" padding="30px">
+      <mj-column>
+        <mj-text font-size="18px" font-weight="bold" color="#1a1a2e">
+          Personal Data Opt-Out Request
+        </mj-text>
+        <mj-text color="#666666" font-size="12px">
+          Request ID: {{requestId}}
+        </mj-text>
+        <mj-divider border-color="#e0e0e0" />
+        <mj-text>
+          To: {{recipientName}} at {{brokerDomain}}
+        </mj-text>
+        <mj-text>
+          I am writing to request the removal of my personal information from your database and website.
+        </mj-text>
+        <mj-text>
+          Please remove the following personal data associated with me from <strong>{{brokerName}}</strong>:
+        </mj-text>
+        <mj-text padding-left="20px" color="#555555">
+          {{piiFields}}
+        </mj-text>
+        <mj-text>
+          Profile URL: {{profileUrl}}
+        </mj-text>
+        <mj-text>
+          I do not consent to the collection, storage, or display of my personal information on your platform. Please process this opt-out request and confirm removal at your earliest convenience.
+        </mj-text>
+        <mj-divider border-color="#e0e0e0" />
+        <mj-text>
+          {{senderName}}<br />
+          {{senderEmail}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

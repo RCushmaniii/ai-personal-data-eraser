@@ -1,0 +1,50 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Arial, sans-serif" />
+      <mj-text font-size="14px" color="#333333" line-height="1.6" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#f4f4f4">
+    <mj-section background-color="#ffffff" padding="30px">
+      <mj-column>
+        <mj-text font-size="18px" font-weight="bold" color="#1a1a2e">
+          Data Deletion Request Under CCPA
+        </mj-text>
+        <mj-text color="#666666" font-size="12px">
+          Request ID: {{requestId}}
+        </mj-text>
+        <mj-divider border-color="#e0e0e0" />
+        <mj-text>
+          To: {{recipientName}} at {{brokerDomain}}
+        </mj-text>
+        <mj-text>
+          I am writing to exercise my right to deletion of personal information under the California Consumer Privacy Act (CCPA), Cal. Civ. Code §1798.105.
+        </mj-text>
+        <mj-text>
+          I request that <strong>{{brokerName}}</strong> delete all personal information it has collected about me, including but not limited to:
+        </mj-text>
+        <mj-text padding-left="20px" color="#555555">
+          {{piiFields}}
+        </mj-text>
+        <mj-text>
+          Profile URL: {{profileUrl}}
+        </mj-text>
+        <mj-text>
+          Under CCPA §1798.105(a), a consumer has the right to request that a business delete any personal information about the consumer which the business has collected. Under §1798.105(c), a business that receives a verifiable consumer request shall delete the consumer's personal information and direct any service providers to delete the consumer's personal information.
+        </mj-text>
+        <mj-text font-weight="bold">
+          Please confirm deletion by {{deadline}} (45 days as required by CCPA).
+        </mj-text>
+        <mj-divider border-color="#e0e0e0" />
+        <mj-text>
+          {{senderName}}<br />
+          {{senderEmail}}
+        </mj-text>
+        <mj-text color="#999999" font-size="11px">
+          {{legalReference}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -1,0 +1,57 @@
+id: peoplefinder
+name: PeopleFinder
+domain: peoplefinder.com
+category: people_search
+difficulty: easy
+estimatedDays: 5
+legalFrameworks: [ccpa, generic]
+requiresVerification: false
+searchUrl: https://www.peoplefinder.com/people/{{firstName}}-{{lastName}}
+optOutUrl: https://www.peoplefinder.com/optout
+optOutMethods: [web_form]
+notes: Relatively straightforward opt-out via web form. No verification required.
+
+steps:
+  search:
+    - name: Navigate to search
+      action:
+        type: navigate
+        url: https://www.peoplefinder.com/people/{{firstName}}-{{lastName}}
+      onFailure: abort
+
+    - name: Analyze search results
+      action:
+        type: ai_analyze
+        prompt: "Look for profile results matching the person's name. Note any matching locations or ages."
+      onFailure: abort
+
+  optOut:
+    - name: Navigate to opt-out page
+      action:
+        type: navigate
+        url: https://www.peoplefinder.com/optout
+      onFailure: abort
+
+    - name: Fill opt-out form
+      action:
+        type: fill_form
+        fields:
+          firstName: "{{firstName}}"
+          lastName: "{{lastName}}"
+          state: "{{state}}"
+          city: "{{city}}"
+      onFailure: abort
+
+    - name: Submit opt-out
+      action:
+        type: click
+        selector: "button[type='submit']"
+      onFailure: retry
+      maxRetries: 2
+
+  verify:
+    - name: Verify removal
+      action:
+        type: verify_removal
+        checkUrl: https://www.peoplefinder.com/people/{{firstName}}-{{lastName}}
+      onFailure: abort

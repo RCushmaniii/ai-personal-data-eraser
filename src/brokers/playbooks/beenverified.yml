@@ -1,0 +1,67 @@
+id: beenverified
+name: BeenVerified
+domain: beenverified.com
+category: background_check
+difficulty: medium
+estimatedDays: 14
+legalFrameworks: [ccpa, generic]
+requiresVerification: false
+searchUrl: https://www.beenverified.com/people/{{firstName}}-{{lastName}}
+optOutUrl: https://www.beenverified.com/app/optout/search
+optOutMethods: [web_form]
+notes: Multi-step opt-out process. Need to find exact profile first, then submit opt-out for each listing.
+
+steps:
+  search:
+    - name: Navigate to people search
+      action:
+        type: navigate
+        url: https://www.beenverified.com/people/{{firstName}}-{{lastName}}
+      onFailure: abort
+
+    - name: Analyze search results
+      action:
+        type: ai_analyze
+        prompt: "Find profile listings matching the target person. Look for matching name, age, and location."
+      onFailure: abort
+
+  optOut:
+    - name: Navigate to opt-out search
+      action:
+        type: navigate
+        url: https://www.beenverified.com/app/optout/search
+      onFailure: abort
+
+    - name: Search for profile to opt out
+      action:
+        type: fill_form
+        fields:
+          firstName: "{{firstName}}"
+          lastName: "{{lastName}}"
+          state: "{{state}}"
+      onFailure: abort
+
+    - name: Select matching profile
+      action:
+        type: ai_analyze
+        prompt: "Select the profile that best matches the target person based on name, age, and location."
+      onFailure: abort
+
+    - name: Confirm opt-out
+      action:
+        type: click
+        selector: ".opt-out-confirm"
+      onFailure: retry
+      maxRetries: 2
+
+    - name: Wait for processing
+      action:
+        type: wait
+        seconds: 5
+
+  verify:
+    - name: Re-search to verify removal
+      action:
+        type: verify_removal
+        checkUrl: https://www.beenverified.com/people/{{firstName}}-{{lastName}}
+      onFailure: abort

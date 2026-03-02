@@ -1,0 +1,45 @@
+{
+  "name": "ai-eraser",
+  "version": "0.1.0",
+  "description": "AI-powered personal data removal engine — automatically finds and removes your data from data brokers",
+  "author": "CushLabs AI Services <hello@cushlabs.com>",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/cli/index.ts",
+  "bin": {
+    "ai-eraser": "src/cli/index.ts"
+  },
+  "scripts": {
+    "dev": "bun run src/cli/index.ts",
+    "build": "bun build src/cli/index.ts --outdir dist --target bun",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "bun test",
+    "dashboard": "bun run src/dashboard/server.ts",
+    "dashboard:dev": "cd src/dashboard/app && bunx --bun vite dev",
+    "migrate": "bun run src/state/migrate.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@clack/prompts": "^0.9.1",
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "croner": "^9.0.0",
+    "libsodium-wrappers-sumo": "^0.8.2",
+    "mjml": "^4.15.3",
+    "nodemailer": "^6.10.0",
+    "xstate": "^5.19.2",
+    "yaml": "^2.7.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/bun": "^1.2.4",
+    "@types/libsodium-wrappers-sumo": "^0.8.2",
+    "@types/mjml": "^4.7.4",
+    "@types/nodemailer": "^6.4.17",
+    "typescript": "^5.7.3"
+  }
+}

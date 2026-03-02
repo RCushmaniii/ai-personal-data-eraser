@@ -1,0 +1,47 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Arial, sans-serif" />
+      <mj-text font-size="14px" color="#333333" line-height="1.6" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#f4f4f4">
+    <mj-section background-color="#ffffff" padding="30px">
+      <mj-column>
+        <mj-text font-size="18px" font-weight="bold" color="#1a1a2e">
+          Follow-Up: Data Deletion Request
+        </mj-text>
+        <mj-text color="#666666" font-size="12px">
+          Reference: Request ID {{requestId}}
+        </mj-text>
+        <mj-divider border-color="#e0e0e0" />
+        <mj-text>
+          To: {{recipientName}} at {{brokerDomain}}
+        </mj-text>
+        <mj-text>
+          I am writing to follow up on my previous data deletion request (Request ID: <strong>{{requestId}}</strong>) submitted to <strong>{{brokerName}}</strong>.
+        </mj-text>
+        <mj-text>
+          I have not yet received confirmation that my personal data has been deleted from your platform. The requested data includes:
+        </mj-text>
+        <mj-text padding-left="20px" color="#555555">
+          {{piiFields}}
+        </mj-text>
+        <mj-text>
+          Profile reference: {{profileUrl}}
+        </mj-text>
+        <mj-text font-weight="bold" color="#cc0000">
+          The compliance deadline for this request is {{deadline}}. Please provide a status update on the processing of this request.
+        </mj-text>
+        <mj-text>
+          {{legalReference}}
+        </mj-text>
+        <mj-divider border-color="#e0e0e0" />
+        <mj-text>
+          {{senderName}}<br />
+          {{senderEmail}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

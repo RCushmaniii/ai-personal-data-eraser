@@ -1,0 +1,60 @@
+id: spokeo
+name: Spokeo
+domain: spokeo.com
+category: people_search
+difficulty: easy
+estimatedDays: 3
+legalFrameworks: [ccpa, generic]
+requiresVerification: true
+searchUrl: https://www.spokeo.com/{{firstName}}-{{lastName}}
+optOutUrl: https://www.spokeo.com/optout
+optOutMethods: [web_form, email]
+notes: Requires email verification link. Removal typically processes within 24-72 hours.
+
+steps:
+  search:
+    - name: Navigate to search page
+      action:
+        type: navigate
+        url: https://www.spokeo.com/{{firstName}}-{{lastName}}
+      onFailure: abort
+
+    - name: Analyze search results
+      action:
+        type: ai_analyze
+        prompt: "Look for profile listings matching the person's name and location. Return any matching profile URLs."
+      onFailure: abort
+
+  optOut:
+    - name: Navigate to opt-out page
+      action:
+        type: navigate
+        url: https://www.spokeo.com/optout
+      onFailure: abort
+
+    - name: Enter profile URL
+      action:
+        type: fill_form
+        fields:
+          url_input: "{{profileUrl}}"
+          email_input: "{{email}}"
+      onFailure: abort
+
+    - name: Submit opt-out request
+      action:
+        type: click
+        selector: "button[type='submit']"
+      onFailure: retry
+      maxRetries: 2
+
+    - name: Wait for processing
+      action:
+        type: wait
+        seconds: 3
+
+  verify:
+    - name: Check profile removal
+      action:
+        type: verify_removal
+        checkUrl: https://www.spokeo.com/{{firstName}}-{{lastName}}
+      onFailure: abort

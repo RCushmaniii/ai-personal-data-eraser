@@ -1,0 +1,62 @@
+id: whitepages
+name: Whitepages
+domain: whitepages.com
+category: people_search
+difficulty: medium
+estimatedDays: 7
+legalFrameworks: [ccpa, generic]
+requiresVerification: true
+searchUrl: https://www.whitepages.com/name/{{firstName}}-{{lastName}}
+optOutUrl: https://www.whitepages.com/suppression-requests
+optOutMethods: [web_form]
+notes: Requires phone verification. May need to create account for suppression request.
+
+steps:
+  search:
+    - name: Navigate to search
+      action:
+        type: navigate
+        url: https://www.whitepages.com/name/{{firstName}}-{{lastName}}
+      onFailure: abort
+
+    - name: Analyze results for matching profiles
+      action:
+        type: ai_analyze
+        prompt: "Identify profile listings matching the person. Look for name, city, state, and age matches."
+      onFailure: abort
+
+  optOut:
+    - name: Navigate to suppression page
+      action:
+        type: navigate
+        url: https://www.whitepages.com/suppression-requests
+      onFailure: abort
+
+    - name: Fill suppression form
+      action:
+        type: fill_form
+        fields:
+          name: "{{firstName}} {{lastName}}"
+          city: "{{city}}"
+          state: "{{state}}"
+      onFailure: abort
+
+    - name: Handle CAPTCHA if present
+      action:
+        type: captcha
+        handler: manual
+      onFailure: skip
+
+    - name: Submit request
+      action:
+        type: click
+        selector: "#submit-suppression"
+      onFailure: retry
+      maxRetries: 2
+
+  verify:
+    - name: Re-search to verify removal
+      action:
+        type: verify_removal
+        checkUrl: https://www.whitepages.com/name/{{firstName}}-{{lastName}}
+      onFailure: abort

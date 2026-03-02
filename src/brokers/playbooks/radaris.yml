@@ -1,0 +1,64 @@
+id: radaris
+name: Radaris
+domain: radaris.com
+category: people_search
+difficulty: hard
+estimatedDays: 30
+legalFrameworks: [ccpa, gdpr, generic]
+requiresVerification: true
+searchUrl: https://radaris.com/p/{{firstName}}/{{lastName}}
+optOutUrl: https://radaris.com/control/privacy
+optOutMethods: [web_form, email]
+notes: Complex opt-out requiring account creation. May need to follow up via email. Known for slow processing.
+
+steps:
+  search:
+    - name: Navigate to person search
+      action:
+        type: navigate
+        url: https://radaris.com/p/{{firstName}}/{{lastName}}
+      onFailure: abort
+
+    - name: Analyze for matching profiles
+      action:
+        type: ai_analyze
+        prompt: "Identify profile listings that match the target person. Check name, location, and any other identifying info."
+      onFailure: abort
+
+  optOut:
+    - name: Navigate to privacy control
+      action:
+        type: navigate
+        url: https://radaris.com/control/privacy
+      onFailure: abort
+
+    - name: Fill removal request form
+      action:
+        type: fill_form
+        fields:
+          name: "{{firstName}} {{lastName}}"
+          email: "{{email}}"
+          profileUrl: "{{profileUrl}}"
+      onFailure: abort
+
+    - name: Submit removal request
+      action:
+        type: click
+        selector: "button.submit-removal"
+      onFailure: retry
+      maxRetries: 3
+
+    - name: Send follow-up CCPA email
+      action:
+        type: send_email
+        template: ccpa_delete
+        to: privacy@radaris.com
+        description: Send formal CCPA deletion request as follow-up
+      onFailure: skip
+
+  verify:
+    - name: Re-search after waiting period
+      action:
+        type: verify_removal
+        checkUrl: https://radaris.com/p/{{firstName}}/{{lastName}}
+      onFailure: abort
