@@ -92,6 +92,25 @@ function handleApi(path: string, req: Request): Response {
 				return Response.json(profiles, { headers });
 			}
 
+			case "/api/broker-intel": {
+				const intel = store.listBrokerIntel();
+				// Enrich with personal removal status from broker_records
+				const records = store.listBrokerRecords();
+				const enriched = intel.map((item) => {
+					const record = records.find((r) => r.brokerId === item.domain || r.brokerId === item.id);
+					return {
+						...item,
+						removalStatus: record?.status ?? null,
+					};
+				});
+				return Response.json(enriched, { headers });
+			}
+
+			case "/api/broker-intel/summary": {
+				const summary = store.getBrokerIntelSummary();
+				return Response.json(summary, { headers });
+			}
+
 			case "/api/health": {
 				return Response.json({ status: "ok", timestamp: new Date().toISOString() }, { headers });
 			}

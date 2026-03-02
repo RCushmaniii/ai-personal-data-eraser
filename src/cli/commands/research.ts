@@ -1,0 +1,134 @@
+import * as p from "@clack/prompts";
+import { ResearchAgent } from "../../agents/research.js";
+import { BrowserManager } from "../../brokers/browser.js";
+import { initConfig } from "../../config/index.js";
+import { getDatabase } from "../../state/database.js";
+import { runMigrations } from "../../state/migrate.js";
+import { Store } from "../../state/store.js";
+import type { BrokerCategory } from "../../types/index.js";
+import * as ui from "../ui.js";
+
+const CATEGORIES: { value: BrokerCategory; label: string }[] = [
+	{ value: "people_search", label: "People Search" },
+	{ value: "background_check", label: "Background Check" },
+	{ value: "marketing", label: "Marketing / Advertising" },
+	{ value: "data_aggregator", label: "Data Aggregator" },
+	{ value: "social_media", label: "Social Media" },
+	{ value: "public_records", label: "Public Records" },
+];
+
+export async function researchCommand(): Promise<void> {
+	ui.header();
+	p.intro("Broker Intelligence — Research & Discovery");
+
+	try {
+		initConfig();
+	} catch {
+		// Config not required for research, but try to load it
+	}
+
+	const db = getDatabase();
+	runMigrations(db);
+
+	// Research mode
+	const mode = await p.select({
+		message: "What would you like to do?",
+		options: [
+			{ value: "specific", label: "Research a specific broker" },
+			{ value: "discover", label: "Discover brokers by category" },
+		],
+	});
+	if (p.isCancel(mode)) return;
+
+	let domain: string | undefined;
+	let category: BrokerCategory | undefined;
+
+	if (mode === "specific") {
+		const input = await p.text({
+			message: "Broker domain:",
+			placeholder: "e.g. spokeo.com",
+			validate: (v) => (!v ? "Domain is required" : undefined),
+		});
+		if (p.isCancel(input)) return;
+		domain = input;
+	} else {
+		const catChoice = await p.select({
+			message: "Select broker category:",
+			options: CATEGORIES,
+		});
+		if (p.isCancel(catChoice)) return;
+		category = catChoice as BrokerCategory;
+	}
+
+	// Headless mode
+	const headless = await p.confirm({
+		message: "Run headless? (no visible browser window)",
+		initialValue: true,
+	});
+	if (p.isCancel(headless)) return;
+
+	const s = p.spinner();
+	const browser = new BrowserManager();
+
+	try {
+		s.start("Launching browser...");
+		await browser.launch(headless);
+		const page = await browser.newPage();
+		s.stop("Browser ready");
+
+		s.start(
+			domain
+				? `Researching ${domain}...`
+				: `Discovering ${category?.replace(/_/g, " ")} brokers...`,
+		);
+
+		const agent = new ResearchAgent(page);
+		const result = await agent.run({ domain, category });
+		s.stop("Research complete");
+
+		if (result.success) {
+			ui.success(result.message);
+		} else {
+			ui.error(result.message);
+		}
+
+		// Display results table
+		if (result.data) {
+			const results = result.data.results as {
+				domain: string;
+				name: string;
+				difficulty: string;
+				success: boolean;
+			}[];
+
+			if (results.length > 0) {
+				console.log();
+				const store = new Store();
+				const rows = results
+					.filter((r) => r.success)
+					.map((r) => {
+						const intel = store.getBrokerIntel(r.domain);
+						return [
+							r.domain,
+							r.name,
+							r.difficulty,
+							intel?.optOutMethod ?? "-",
+							intel?.optOutUrl ?? "-",
+						];
+					});
+
+				if (rows.length > 0) {
+					ui.table(rows, ["Domain", "Name", "Difficulty", "Method", "Opt-Out URL"]);
+				}
+			}
+		}
+
+		console.log();
+		p.outro("View results: bun run dashboard → Research page");
+	} catch (error) {
+		s.stop("Error");
+		ui.error(error instanceof Error ? error.message : String(error));
+	} finally {
+		await browser.close();
+	}
+}

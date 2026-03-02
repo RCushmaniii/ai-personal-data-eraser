@@ -52,3 +52,12 @@ export type {
 	EventHandler,
 	EventBus,
 } from "./events.js";
+
+export type {
+	BrokerIntel,
+	BrokerIntelStatus,
+	ResearchQuery,
+	DifficultySignals,
+	BrokerIntelSummary,
+	BrokerIntelFilter,
+} from "./research.js";

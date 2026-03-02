@@ -89,6 +89,43 @@ const migrations: Migration[] = [
 			CREATE INDEX IF NOT EXISTS idx_emails_broker_id ON emails(broker_id);
 		`,
 	},
+	{
+		version: 2,
+		description: "Broker intelligence table for research agent",
+		up: `
+			CREATE TABLE IF NOT EXISTS broker_intel (
+				id TEXT PRIMARY KEY,
+				domain TEXT NOT NULL UNIQUE,
+				name TEXT NOT NULL,
+				category TEXT,
+				opt_out_url TEXT,
+				opt_out_method TEXT,
+				privacy_contact_email TEXT,
+				requires_account INTEGER NOT NULL DEFAULT 0,
+				requires_id_upload INTEGER NOT NULL DEFAULT 0,
+				has_captcha INTEGER NOT NULL DEFAULT 0,
+				requires_postal_mail INTEGER NOT NULL DEFAULT 0,
+				verification_steps INTEGER NOT NULL DEFAULT 0,
+				estimated_days INTEGER,
+				difficulty TEXT,
+				difficulty_score INTEGER NOT NULL DEFAULT 0,
+				legal_frameworks TEXT,
+				data_categories TEXT,
+				notes TEXT,
+				source_urls TEXT,
+				scraped_at TEXT,
+				has_playbook INTEGER NOT NULL DEFAULT 0,
+				status TEXT NOT NULL DEFAULT 'researched',
+				created_at TEXT NOT NULL DEFAULT (datetime('now')),
+				updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+			);
+
+			CREATE INDEX IF NOT EXISTS idx_broker_intel_domain ON broker_intel(domain);
+			CREATE INDEX IF NOT EXISTS idx_broker_intel_category ON broker_intel(category);
+			CREATE INDEX IF NOT EXISTS idx_broker_intel_difficulty ON broker_intel(difficulty);
+			CREATE INDEX IF NOT EXISTS idx_broker_intel_status ON broker_intel(status);
+		`,
+	},
 ];
 
 /**

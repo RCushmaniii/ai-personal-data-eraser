@@ -18,6 +18,10 @@ const STATUS_STYLES: Record<string, string> = {
 	running: "bg-blue-900/50 text-blue-300",
 	completed: "bg-green-900/50 text-green-300",
 	error: "bg-red-900/50 text-red-300",
+	// Research statuses
+	researched: "bg-blue-900/50 text-blue-300",
+	verified: "bg-emerald-900/50 text-emerald-300",
+	playbook_drafted: "bg-violet-900/50 text-violet-300",
 };
 
 export function StatusBadge({ status }: StatusBadgeProps) {

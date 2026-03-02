@@ -1,6 +1,6 @@
 /** Agent system types */
 
-export type AgentType = "orchestrator" | "recon" | "removal" | "legal" | "monitor";
+export type AgentType = "orchestrator" | "recon" | "removal" | "legal" | "monitor" | "research";
 
 export type AgentStatus = "idle" | "running" | "paused" | "error" | "completed";
 

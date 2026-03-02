@@ -3,6 +3,7 @@ import { Command } from "commander";
 import { configCommand } from "./commands/config.js";
 import { dashboardCommand } from "./commands/dashboard.js";
 import { removeCommand } from "./commands/remove.js";
+import { researchCommand } from "./commands/research.js";
 import { scanCommand } from "./commands/scan.js";
 import { setupCommand } from "./commands/setup.js";
 import { statusCommand } from "./commands/status.js";
@@ -35,6 +36,11 @@ program
 	.command("dashboard")
 	.description("Launch the web-based monitoring dashboard")
 	.action(dashboardCommand);
+
+program
+	.command("research")
+	.description("Research data brokers — discover opt-out processes and difficulty")
+	.action(researchCommand);
 
 program.command("config").description("View current configuration").action(configCommand);
 

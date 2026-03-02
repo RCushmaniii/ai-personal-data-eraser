@@ -160,5 +160,217 @@ for (const entry of auditEntries) {
 }
 console.log(`  Created ${auditEntries.length} audit log entries`);
 
+// --- Broker Intel (Research Data) ---
+const brokerIntel: {
+	domain: string;
+	name: string;
+	category: string;
+	optOutUrl: string;
+	optOutMethod: string;
+	privacyContactEmail: string | null;
+	requiresAccount: boolean;
+	requiresIdUpload: boolean;
+	hasCaptcha: boolean;
+	requiresPostalMail: boolean;
+	verificationSteps: number;
+	estimatedDays: number;
+	difficulty: string;
+	difficultyScore: number;
+	legalFrameworks: string[];
+	dataCategories: string[];
+	hasPlaybook: boolean;
+	status: string;
+}[] = [
+	{
+		domain: "spokeo.com",
+		name: "Spokeo",
+		category: "people_search",
+		optOutUrl: "https://www.spokeo.com/optout",
+		optOutMethod: "web_form",
+		privacyContactEmail: "privacy@spokeo.com",
+		requiresAccount: false,
+		requiresIdUpload: false,
+		hasCaptcha: true,
+		requiresPostalMail: false,
+		verificationSteps: 1,
+		estimatedDays: 3,
+		difficulty: "medium",
+		difficultyScore: 3,
+		legalFrameworks: ["ccpa", "gdpr"],
+		dataCategories: ["phone", "email", "address", "relatives", "social_media"],
+		hasPlaybook: true,
+		status: "verified",
+	},
+	{
+		domain: "whitepages.com",
+		name: "Whitepages",
+		category: "people_search",
+		optOutUrl: "https://www.whitepages.com/suppression-requests",
+		optOutMethod: "web_form",
+		privacyContactEmail: "support@whitepages.com",
+		requiresAccount: false,
+		requiresIdUpload: false,
+		hasCaptcha: true,
+		requiresPostalMail: false,
+		verificationSteps: 1,
+		estimatedDays: 7,
+		difficulty: "medium",
+		difficultyScore: 3,
+		legalFrameworks: ["ccpa"],
+		dataCategories: ["phone", "email", "address", "relatives"],
+		hasPlaybook: true,
+		status: "verified",
+	},
+	{
+		domain: "beenverified.com",
+		name: "BeenVerified",
+		category: "people_search",
+		optOutUrl: "https://www.beenverified.com/app/optout/search",
+		optOutMethod: "web_form",
+		privacyContactEmail: "privacy@beenverified.com",
+		requiresAccount: false,
+		requiresIdUpload: false,
+		hasCaptcha: true,
+		requiresPostalMail: false,
+		verificationSteps: 2,
+		estimatedDays: 14,
+		difficulty: "medium",
+		difficultyScore: 4,
+		legalFrameworks: ["ccpa"],
+		dataCategories: ["phone", "email", "address", "criminal_records", "property"],
+		hasPlaybook: true,
+		status: "verified",
+	},
+	{
+		domain: "radaris.com",
+		name: "Radaris",
+		category: "people_search",
+		optOutUrl: "https://radaris.com/control/privacy",
+		optOutMethod: "account_deletion",
+		privacyContactEmail: "support@radaris.com",
+		requiresAccount: true,
+		requiresIdUpload: false,
+		hasCaptcha: true,
+		requiresPostalMail: false,
+		verificationSteps: 2,
+		estimatedDays: 30,
+		difficulty: "hard",
+		difficultyScore: 6,
+		legalFrameworks: ["ccpa"],
+		dataCategories: ["phone", "email", "address", "employment", "relatives", "court_records"],
+		hasPlaybook: true,
+		status: "verified",
+	},
+	{
+		domain: "peoplefinder.com",
+		name: "PeopleFinder",
+		category: "people_search",
+		optOutUrl: "https://www.peoplefinder.com/optout",
+		optOutMethod: "web_form",
+		privacyContactEmail: null,
+		requiresAccount: false,
+		requiresIdUpload: false,
+		hasCaptcha: false,
+		requiresPostalMail: false,
+		verificationSteps: 1,
+		estimatedDays: 5,
+		difficulty: "easy",
+		difficultyScore: 1,
+		legalFrameworks: ["ccpa"],
+		dataCategories: ["phone", "address", "relatives"],
+		hasPlaybook: true,
+		status: "verified",
+	},
+	{
+		domain: "mylife.com",
+		name: "MyLife",
+		category: "people_search",
+		optOutUrl: "https://www.mylife.com/privacy-policy#optout",
+		optOutMethod: "email",
+		privacyContactEmail: "privacy@mylife.com",
+		requiresAccount: true,
+		requiresIdUpload: true,
+		hasCaptcha: false,
+		requiresPostalMail: false,
+		verificationSteps: 3,
+		estimatedDays: 45,
+		difficulty: "very_hard",
+		difficultyScore: 8,
+		legalFrameworks: ["ccpa"],
+		dataCategories: ["phone", "email", "address", "employment", "education", "social_media"],
+		hasPlaybook: true,
+		status: "verified",
+	},
+	{
+		domain: "intelius.com",
+		name: "Intelius",
+		category: "background_check",
+		optOutUrl: "https://www.intelius.com/opt-out",
+		optOutMethod: "web_form",
+		privacyContactEmail: "privacy@intelius.com",
+		requiresAccount: false,
+		requiresIdUpload: true,
+		hasCaptcha: true,
+		requiresPostalMail: false,
+		verificationSteps: 2,
+		estimatedDays: 14,
+		difficulty: "hard",
+		difficultyScore: 7,
+		legalFrameworks: ["ccpa", "gdpr"],
+		dataCategories: ["phone", "email", "address", "criminal_records", "court_records", "property"],
+		hasPlaybook: false,
+		status: "researched",
+	},
+	{
+		domain: "acxiom.com",
+		name: "Acxiom",
+		category: "marketing",
+		optOutUrl: "https://isapps.acxiom.com/optout/optout.aspx",
+		optOutMethod: "web_form",
+		privacyContactEmail: "consumeradvo@acxiom.com",
+		requiresAccount: false,
+		requiresIdUpload: false,
+		hasCaptcha: false,
+		requiresPostalMail: false,
+		verificationSteps: 1,
+		estimatedDays: 10,
+		difficulty: "easy",
+		difficultyScore: 1,
+		legalFrameworks: ["ccpa", "gdpr"],
+		dataCategories: ["email", "address", "browsing_history", "location"],
+		hasPlaybook: false,
+		status: "researched",
+	},
+];
+
+for (const bi of brokerIntel) {
+	store.upsertBrokerIntel({
+		domain: bi.domain,
+		name: bi.name,
+		category: bi.category as Parameters<typeof store.upsertBrokerIntel>[0]["category"],
+		optOutUrl: bi.optOutUrl,
+		optOutMethod: bi.optOutMethod as Parameters<typeof store.upsertBrokerIntel>[0]["optOutMethod"],
+		privacyContactEmail: bi.privacyContactEmail,
+		requiresAccount: bi.requiresAccount,
+		requiresIdUpload: bi.requiresIdUpload,
+		hasCaptcha: bi.hasCaptcha,
+		requiresPostalMail: bi.requiresPostalMail,
+		verificationSteps: bi.verificationSteps,
+		estimatedDays: bi.estimatedDays,
+		difficulty: bi.difficulty as Parameters<typeof store.upsertBrokerIntel>[0]["difficulty"],
+		difficultyScore: bi.difficultyScore,
+		legalFrameworks: bi.legalFrameworks as Parameters<
+			typeof store.upsertBrokerIntel
+		>[0]["legalFrameworks"],
+		dataCategories: bi.dataCategories,
+		hasPlaybook: bi.hasPlaybook,
+		status: bi.status as Parameters<typeof store.upsertBrokerIntel>[0]["status"],
+		sourceUrls: [`https://${bi.domain}`],
+		scrapedAt: new Date().toISOString(),
+	});
+	console.log(`  Created broker intel: ${bi.name} (${bi.difficulty})`);
+}
+console.log(`  Created ${brokerIntel.length} broker intel entries`);
+
 console.log("\n  Demo data seeded successfully!");
 console.log("  View at: bun run dashboard → http://127.0.0.1:3847");

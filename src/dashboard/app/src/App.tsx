@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Layout } from "./components/Layout.tsx";
 import { BrokersPage } from "./pages/Brokers.tsx";
 import { DashboardPage } from "./pages/Dashboard.tsx";
+import { ResearchPage } from "./pages/Research.tsx";
 import { SettingsPage } from "./pages/Settings.tsx";
 import { TasksPage } from "./pages/Tasks.tsx";
 
-type Page = "dashboard" | "brokers" | "tasks" | "settings";
+type Page = "dashboard" | "brokers" | "research" | "tasks" | "settings";
 
 export function App() {
 	const [currentPage, setCurrentPage] = useState<Page>("dashboard");
@@ -16,6 +17,8 @@ export function App() {
 				return <DashboardPage />;
 			case "brokers":
 				return <BrokersPage />;
+			case "research":
+				return <ResearchPage />;
 			case "tasks":
 				return <TasksPage />;
 			case "settings":

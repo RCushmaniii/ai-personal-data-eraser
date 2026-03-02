@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-type Page = "dashboard" | "brokers" | "tasks" | "settings";
+type Page = "dashboard" | "brokers" | "research" | "tasks" | "settings";
 
 interface LayoutProps {
 	children: ReactNode;
@@ -11,6 +11,7 @@ interface LayoutProps {
 const navItems: { page: Page; label: string; icon: string }[] = [
 	{ page: "dashboard", label: "Dashboard", icon: "📊" },
 	{ page: "brokers", label: "Brokers", icon: "🏢" },
+	{ page: "research", label: "Research", icon: "🔍" },
 	{ page: "tasks", label: "Tasks", icon: "📋" },
 	{ page: "settings", label: "Settings", icon: "⚙️" },
 ];
