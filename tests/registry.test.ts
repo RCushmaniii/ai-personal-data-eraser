@@ -1,6 +1,6 @@
-import { describe, test, expect } from "bun:test";
-import { BrokerRegistry } from "../src/brokers/registry.js";
+import { describe, expect, test } from "bun:test";
 import { resolve } from "node:path";
+import { BrokerRegistry } from "../src/brokers/registry.js";
 
 const PLAYBOOK_DIR = resolve(import.meta.dir, "../src/brokers/playbooks");
 

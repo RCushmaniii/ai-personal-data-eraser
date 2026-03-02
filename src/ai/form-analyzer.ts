@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { getConfig } from "../config/index.js";
+import type { PiiMatch, PiiSearchQuery } from "../types/index.js";
 import { FORM_ANALYZER_SYSTEM, SEARCH_RESULT_ANALYZER_SYSTEM } from "./prompts.js";
-import type { PiiSearchQuery, PiiMatch } from "../types/index.js";
 
 export interface FormFieldMapping {
 	selector: string;

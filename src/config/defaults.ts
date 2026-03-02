@@ -57,13 +57,11 @@ export function loadConfigFromEnv(): Partial<AppConfig> {
 			user: process.env.IMAP_USER ?? "",
 			pass: process.env.IMAP_PASS ?? "",
 			folder: process.env.IMAP_FOLDER ?? DEFAULT_CONFIG.imap!.folder,
-			pollInterval:
-				Number(process.env.IMAP_POLL_INTERVAL) || DEFAULT_CONFIG.imap!.pollInterval,
+			pollInterval: Number(process.env.IMAP_POLL_INTERVAL) || DEFAULT_CONFIG.imap!.pollInterval,
 		},
 		vault: {
 			dataDir: process.env.VAULT_DATA_DIR ?? DEFAULT_CONFIG.vault!.dataDir,
-			memoryCost:
-				Number(process.env.VAULT_MEMORY_COST) || DEFAULT_CONFIG.vault!.memoryCost,
+			memoryCost: Number(process.env.VAULT_MEMORY_COST) || DEFAULT_CONFIG.vault!.memoryCost,
 			timeCost: Number(process.env.VAULT_TIME_COST) || DEFAULT_CONFIG.vault!.timeCost,
 		},
 		dashboard: {

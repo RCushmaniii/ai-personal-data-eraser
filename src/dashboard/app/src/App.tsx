@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Layout } from "./components/Layout.tsx";
-import { DashboardPage } from "./pages/Dashboard.tsx";
 import { BrokersPage } from "./pages/Brokers.tsx";
-import { TasksPage } from "./pages/Tasks.tsx";
+import { DashboardPage } from "./pages/Dashboard.tsx";
 import { SettingsPage } from "./pages/Settings.tsx";
+import { TasksPage } from "./pages/Tasks.tsx";
 
 type Page = "dashboard" | "brokers" | "tasks" | "settings";
 

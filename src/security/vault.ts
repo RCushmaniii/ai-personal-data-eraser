@@ -1,9 +1,9 @@
 // Use require() with -sumo variant — standard libsodium-wrappers lacks crypto_pwhash,
 // and Bun's ESM resolution for the package is broken
 const sodium = require("libsodium-wrappers-sumo") as typeof import("libsodium-wrappers-sumo");
-import { mkdirSync, existsSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { deriveKey, toBase64, fromBase64, secureWipe, type DerivedKey } from "./keychain.js";
+import { type DerivedKey, deriveKey, fromBase64, secureWipe, toBase64 } from "./keychain.js";
 
 let _sodiumReady = false;
 
@@ -45,11 +45,7 @@ export class Vault {
 	 * Initializes the vault with a password. Derives encryption key using Argon2id.
 	 * If the vault already exists, loads existing metadata and derives key with stored salt.
 	 */
-	async unlock(
-		password: string,
-		memoryCost = 65536,
-		timeCost = 3,
-	): Promise<void> {
+	async unlock(password: string, memoryCost = 65536, timeCost = 3): Promise<void> {
 		await ensureReady();
 		mkdirSync(this.dataDir, { recursive: true });
 
@@ -132,11 +128,7 @@ export class Vault {
 		const ciphertext = fromBase64(readFileSync(entryPath, "utf-8"));
 		const nonce = fromBase64(entryMeta.nonce);
 
-		const plaintext = sodium.crypto_secretbox_open_easy(
-			ciphertext,
-			nonce,
-			this.derivedKey!.key,
-		);
+		const plaintext = sodium.crypto_secretbox_open_easy(ciphertext, nonce, this.derivedKey!.key);
 
 		return sodium.to_string(plaintext);
 	}

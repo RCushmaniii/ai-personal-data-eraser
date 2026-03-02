@@ -1,6 +1,12 @@
-import { Database } from "bun:sqlite";
+import type { Database } from "bun:sqlite";
 import { randomUUID } from "node:crypto";
-import type { BrokerRecord, BrokerStatus, AgentTask, AuditLogEntry, AgentStatus } from "../types/index.js";
+import type {
+	AgentStatus,
+	AgentTask,
+	AuditLogEntry,
+	BrokerRecord,
+	BrokerStatus,
+} from "../types/index.js";
 import { getDatabase } from "./database.js";
 
 /**
@@ -17,13 +23,13 @@ export class Store {
 
 	createProfile(vaultRef: string): string {
 		const id = randomUUID();
-		this.db
-			.query("INSERT INTO profiles (id, vault_ref) VALUES (?, ?)")
-			.run(id, vaultRef);
+		this.db.query("INSERT INTO profiles (id, vault_ref) VALUES (?, ?)").run(id, vaultRef);
 		return id;
 	}
 
-	getProfile(id: string): { id: string; vaultRef: string; createdAt: string; updatedAt: string } | null {
+	getProfile(
+		id: string,
+	): { id: string; vaultRef: string; createdAt: string; updatedAt: string } | null {
 		const row = this.db
 			.query<{ id: string; vault_ref: string; created_at: string; updated_at: string }, [string]>(
 				"SELECT * FROM profiles WHERE id = ?",
@@ -108,14 +114,14 @@ export class Store {
 		}
 
 		params.push(id);
-		this.db
-			.query(`UPDATE broker_records SET ${updates.join(", ")} WHERE id = ?`)
-			.run(...params);
+		this.db.query(`UPDATE broker_records SET ${updates.join(", ")} WHERE id = ?`).run(...params);
 	}
 
 	incrementBrokerAttempts(id: string): void {
 		this.db
-			.query("UPDATE broker_records SET attempts = attempts + 1, updated_at = datetime('now') WHERE id = ?")
+			.query(
+				"UPDATE broker_records SET attempts = attempts + 1, updated_at = datetime('now') WHERE id = ?",
+			)
 			.run(id);
 	}
 
@@ -130,7 +136,12 @@ export class Store {
 
 	// --- Agent Tasks ---
 
-	createAgentTask(agentType: string, action: string, payload: Record<string, unknown> = {}, priority = 0): string {
+	createAgentTask(
+		agentType: string,
+		action: string,
+		payload: Record<string, unknown> = {},
+		priority = 0,
+	): string {
 		const id = randomUUID();
 		this.db
 			.query(
@@ -174,9 +185,7 @@ export class Store {
 		}
 
 		params.push(id);
-		this.db
-			.query(`UPDATE agent_tasks SET ${updates.join(", ")} WHERE id = ?`)
-			.run(...params);
+		this.db.query(`UPDATE agent_tasks SET ${updates.join(", ")} WHERE id = ?`).run(...params);
 	}
 
 	getPendingTasks(agentType?: string): AgentTask[] {

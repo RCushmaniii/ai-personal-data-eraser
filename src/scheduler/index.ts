@@ -1,7 +1,7 @@
 import { Cron } from "croner";
-import { getConfig } from "../config/index.js";
-import { ReconAgent } from "../agents/recon.js";
 import { MonitorAgent } from "../agents/monitor.js";
+import { ReconAgent } from "../agents/recon.js";
+import { getConfig } from "../config/index.js";
 import { Store } from "../state/store.js";
 
 interface SchedulerOptions {

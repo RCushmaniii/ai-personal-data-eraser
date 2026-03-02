@@ -1,6 +1,6 @@
 import type { AppConfig } from "../types/index.js";
-import { appConfigSchema } from "./schema.js";
 import { loadConfigFromEnv } from "./defaults.js";
+import { appConfigSchema } from "./schema.js";
 
 let _config: AppConfig | null = null;
 

@@ -1,6 +1,6 @@
-import { describe, test, expect } from "bun:test";
-import { appConfigSchema } from "../src/config/schema.js";
+import { describe, expect, test } from "bun:test";
 import { playbookSchema } from "../src/brokers/playbook-schema.js";
+import { appConfigSchema } from "../src/config/schema.js";
 
 describe("Config Schema", () => {
 	test("validates a complete config", () => {

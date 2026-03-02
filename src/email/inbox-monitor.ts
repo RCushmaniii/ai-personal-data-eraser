@@ -1,6 +1,5 @@
-import type { InboxMessage, ClassifiedResponse } from "../types/index.js";
 import { classifyResponse } from "../ai/response-parser.js";
-import { getConfig } from "../config/index.js";
+import type { ClassifiedResponse, InboxMessage } from "../types/index.js";
 
 /**
  * Monitors inbox for responses from data brokers.
@@ -40,11 +39,7 @@ export class InboxMonitor {
 			if (!this.isBrokerEmail(fromDomain)) continue;
 
 			const brokerId = this.domainToBrokerId(fromDomain);
-			const classified = await classifyResponse(
-				message.body,
-				message.subject,
-				brokerId,
-			);
+			const classified = await classifyResponse(message.body, message.subject, brokerId);
 			classified.messageUid = message.uid;
 
 			results.push(classified);

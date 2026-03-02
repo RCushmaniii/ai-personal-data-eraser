@@ -1,5 +1,12 @@
 import { randomUUID } from "node:crypto";
-import type { AgentType, AgentStatus, AgentResult, AgentAction, AppEvent, EventType } from "../types/index.js";
+import type {
+	AgentAction,
+	AgentResult,
+	AgentStatus,
+	AgentType,
+	AppEvent,
+	EventType,
+} from "../types/index.js";
 
 type EventHandler = (event: AppEvent) => void | Promise<void>;
 

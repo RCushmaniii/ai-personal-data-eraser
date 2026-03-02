@@ -1,23 +1,26 @@
-import { BaseAgent } from "./base-agent.js";
-import { getRegistry } from "../brokers/registry.js";
+import type { Page } from "playwright";
 import { PlaybookRunner } from "../brokers/playbook-runner.js";
+import { getRegistry } from "../brokers/registry.js";
 import { Store } from "../state/store.js";
 import type { AgentResult, PiiSearchQuery } from "../types/index.js";
+import { BaseAgent } from "./base-agent.js";
 
 /**
  * Monitor Agent — re-checks brokers to verify removals and detect re-appearances.
  */
 export class MonitorAgent extends BaseAgent {
-	private runner = new PlaybookRunner();
+	private page: Page | null;
 	private store = new Store();
 
-	constructor() {
+	constructor(page?: Page) {
 		super("monitor");
+		this.page = page ?? null;
 	}
 
 	async execute(payload: Record<string, unknown>): Promise<AgentResult> {
 		const query = payload as unknown as PiiSearchQuery & { profileId: string };
 		const registry = getRegistry();
+		const runner = new PlaybookRunner(this.page ?? undefined);
 
 		const confirmedRecords = this.store.getBrokersByStatus("removal_confirmed");
 		const submittedRecords = this.store.getBrokersByStatus("opt_out_submitted");
@@ -40,7 +43,7 @@ export class MonitorAgent extends BaseAgent {
 			this.logAction("recheck", `Re-checking ${record.brokerId}`);
 
 			try {
-				const verifyResult = await this.runner.runVerify(playbook, query);
+				const verifyResult = await runner.runVerify(playbook, query);
 
 				if (record.status === "removal_confirmed") {
 					// Check for re-appearance

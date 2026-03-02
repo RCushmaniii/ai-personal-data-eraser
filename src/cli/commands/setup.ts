@@ -1,9 +1,8 @@
+import { writeFileSync } from "node:fs";
 import * as p from "@clack/prompts";
-import { writeFileSync, existsSync } from "node:fs";
 import { Vault } from "../../security/vault.js";
-import { runMigrations } from "../../state/migrate.js";
 import { getDatabase } from "../../state/database.js";
-import { Store } from "../../state/store.js";
+import { runMigrations } from "../../state/migrate.js";
 import * as ui from "../ui.js";
 
 export async function setupCommand(): Promise<void> {

@@ -1,9 +1,8 @@
-import { Store } from "../../state/store.js";
 import { getRegistry } from "../../brokers/registry.js";
-import { runMigrations } from "../../state/migrate.js";
 import { getDatabase } from "../../state/database.js";
+import { runMigrations } from "../../state/migrate.js";
+import { Store } from "../../state/store.js";
 import * as ui from "../ui.js";
-import type { BrokerStatus } from "../../types/index.js";
 
 export async function statusCommand(): Promise<void> {
 	ui.header();
@@ -37,5 +36,7 @@ export async function statusCommand(): Promise<void> {
 
 	const summary = store.getCampaignSummary();
 	console.log();
-	ui.info(`Total: ${summary.total} | Found: ${summary.found} | Removed: ${summary.confirmed} | Failed: ${summary.failed} | Pending: ${summary.pending}`);
+	ui.info(
+		`Total: ${summary.total} | Found: ${summary.found} | Removed: ${summary.confirmed} | Failed: ${summary.failed} | Pending: ${summary.pending}`,
+	);
 }

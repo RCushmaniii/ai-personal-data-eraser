@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { getConfig } from "../config/index.js";
-import { RESPONSE_CLASSIFIER_SYSTEM, LEGAL_REQUEST_SYSTEM } from "./prompts.js";
-import type { ResponseClassification, ClassifiedResponse, LegalFramework } from "../types/index.js";
+import type { ClassifiedResponse, LegalFramework, ResponseClassification } from "../types/index.js";
+import { LEGAL_REQUEST_SYSTEM, RESPONSE_CLASSIFIER_SYSTEM } from "./prompts.js";
 
 let _client: Anthropic | null = null;
 

@@ -1,24 +1,27 @@
-import { BaseAgent } from "./base-agent.js";
-import { getRegistry } from "../brokers/registry.js";
+import type { Page } from "playwright";
 import { PlaybookRunner } from "../brokers/playbook-runner.js";
+import { getRegistry } from "../brokers/registry.js";
 import { Store } from "../state/store.js";
 import type { AgentResult, PiiSearchQuery } from "../types/index.js";
+import { BaseAgent } from "./base-agent.js";
 
 /**
  * Removal Agent — executes opt-out playbooks on brokers where data was found.
  */
 export class RemovalAgent extends BaseAgent {
-	private runner = new PlaybookRunner();
+	private page: Page | null;
 	private store = new Store();
 
-	constructor() {
+	constructor(page?: Page) {
 		super("removal");
+		this.page = page ?? null;
 	}
 
 	async execute(payload: Record<string, unknown>): Promise<AgentResult> {
 		const { profileId } = payload as { profileId: string };
 		const query = payload as unknown as PiiSearchQuery & { profileId: string };
 		const registry = getRegistry();
+		const runner = new PlaybookRunner(this.page ?? undefined);
 
 		const records = this.store.getBrokersByStatus("found");
 		const profileRecords = records.filter((r) => r.profileId === profileId);
@@ -41,7 +44,7 @@ export class RemovalAgent extends BaseAgent {
 			this.store.updateBrokerStatus(record.id, "opt_out_started");
 
 			try {
-				const result = await this.runner.runOptOut(playbook, query);
+				const result = await runner.runOptOut(playbook, query);
 
 				if (result.success) {
 					this.store.updateBrokerStatus(record.id, "opt_out_submitted");

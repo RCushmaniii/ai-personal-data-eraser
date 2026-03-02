@@ -1,4 +1,4 @@
-import { setup, createActor, type AnyActorRef } from "xstate";
+import { type AnyActorRef, createActor, setup } from "xstate";
 import type { BrokerStatus } from "../types/index.js";
 
 /**

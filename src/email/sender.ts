@@ -1,4 +1,4 @@
-import { createTransport, type Transporter } from "nodemailer";
+import { type Transporter, createTransport } from "nodemailer";
 import { getConfig } from "../config/index.js";
 import type { EmailMessage } from "../types/index.js";
 

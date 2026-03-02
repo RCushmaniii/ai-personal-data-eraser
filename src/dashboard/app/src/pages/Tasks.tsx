@@ -52,10 +52,7 @@ export function TasksPage() {
 						</thead>
 						<tbody>
 							{entries.map((entry) => (
-								<tr
-									key={entry.id}
-									className="border-b border-gray-800/50 hover:bg-gray-800/30"
-								>
+								<tr key={entry.id} className="border-b border-gray-800/50 hover:bg-gray-800/30">
 									<td className="px-4 py-3 text-gray-400 font-mono text-xs">
 										{entry.timestamp?.slice(0, 19).replace("T", " ")}
 									</td>
@@ -63,9 +60,7 @@ export function TasksPage() {
 										<StatusBadge status={entry.agentType} />
 									</td>
 									<td className="px-4 py-3 text-gray-300">{entry.action}</td>
-									<td className="px-4 py-3 text-gray-400 max-w-xs truncate">
-										{entry.details}
-									</td>
+									<td className="px-4 py-3 text-gray-400 max-w-xs truncate">{entry.details}</td>
 									<td className="px-4 py-3">
 										{entry.success ? (
 											<span className="text-green-400">✓</span>

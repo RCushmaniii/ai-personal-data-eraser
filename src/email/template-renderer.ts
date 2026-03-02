@@ -1,7 +1,7 @@
-import mjml2html from "mjml";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import type { EmailTemplateType, EmailTemplateData } from "../types/index.js";
+import mjml2html from "mjml";
+import type { EmailTemplateData, EmailTemplateType } from "../types/index.js";
 
 const TEMPLATE_DIR = resolve(import.meta.dir, "templates");
 

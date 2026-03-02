@@ -1,9 +1,9 @@
 import * as p from "@clack/prompts";
 import { RemovalAgent } from "../../agents/removal.js";
-import { Store } from "../../state/store.js";
 import { initConfig } from "../../config/index.js";
-import { runMigrations } from "../../state/migrate.js";
 import { getDatabase } from "../../state/database.js";
+import { runMigrations } from "../../state/migrate.js";
+import { Store } from "../../state/store.js";
 import * as ui from "../ui.js";
 
 export async function removeCommand(): Promise<void> {

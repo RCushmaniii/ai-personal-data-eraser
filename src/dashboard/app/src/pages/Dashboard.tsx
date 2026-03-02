@@ -53,10 +53,7 @@ export function DashboardPage() {
 
 			<div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
 				{cards.map((card) => (
-					<div
-						key={card.label}
-						className="bg-gray-900 border border-gray-800 rounded-xl p-5"
-					>
+					<div key={card.label} className="bg-gray-900 border border-gray-800 rounded-xl p-5">
 						<p className="text-sm text-gray-500 mb-1">{card.label}</p>
 						<p className={`text-3xl font-bold ${card.color}`}>{card.value}</p>
 					</div>
@@ -74,8 +71,8 @@ export function DashboardPage() {
 					/>
 				</div>
 				<p className="text-sm text-gray-500 mt-2">
-					{stats.total > 0 ? ((stats.confirmed / stats.total) * 100).toFixed(1) : 0}%
-					of brokers have confirmed removal
+					{stats.total > 0 ? ((stats.confirmed / stats.total) * 100).toFixed(1) : 0}% of brokers
+					have confirmed removal
 				</p>
 			</div>
 		</div>

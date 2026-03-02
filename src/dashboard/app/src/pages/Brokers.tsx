@@ -40,8 +40,7 @@ export function BrokersPage() {
 				<div className="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center">
 					<p className="text-gray-500">No broker records yet.</p>
 					<p className="text-gray-600 text-sm mt-1">
-						Run <code className="text-violet-400">bun run dev scan</code> to discover
-						your data.
+						Run <code className="text-violet-400">bun run dev scan</code> to discover your data.
 					</p>
 				</div>
 			</div>
@@ -50,9 +49,7 @@ export function BrokersPage() {
 
 	return (
 		<div>
-			<h2 className="text-2xl font-bold mb-6">
-				Data Brokers ({brokers.length})
-			</h2>
+			<h2 className="text-2xl font-bold mb-6">Data Brokers ({brokers.length})</h2>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{brokers.map((broker) => (
 					<BrokerCard

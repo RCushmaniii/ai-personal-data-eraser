@@ -1,24 +1,27 @@
-import { BaseAgent } from "./base-agent.js";
-import { getRegistry } from "../brokers/registry.js";
+import type { Page } from "playwright";
 import { PlaybookRunner } from "../brokers/playbook-runner.js";
+import { getRegistry } from "../brokers/registry.js";
 import { Store } from "../state/store.js";
 import type { AgentResult, PiiSearchQuery } from "../types/index.js";
+import { BaseAgent } from "./base-agent.js";
 
 /**
  * Recon Agent — scans data brokers to find where a person's data appears.
  */
 export class ReconAgent extends BaseAgent {
-	private runner = new PlaybookRunner();
+	private page: Page | null;
 	private store = new Store();
 
-	constructor() {
+	constructor(page?: Page) {
 		super("recon");
+		this.page = page ?? null;
 	}
 
 	async execute(payload: Record<string, unknown>): Promise<AgentResult> {
 		const query = payload as unknown as PiiSearchQuery & { profileId: string };
 		const registry = getRegistry();
 		const brokers = registry.listBrokers();
+		const runner = new PlaybookRunner(this.page ?? undefined);
 
 		this.logAction("scan_start", `Scanning ${brokers.length} brokers`, {
 			query: `${query.firstName} ${query.lastName}`,
@@ -33,7 +36,7 @@ export class ReconAgent extends BaseAgent {
 			this.logAction("scan_broker", `Scanning ${broker.name}`, { brokerId: broker.id });
 
 			try {
-				const searchResult = await this.runner.runSearch(playbook, query);
+				const searchResult = await runner.runSearch(playbook, query);
 
 				if (searchResult.success) {
 					this.store.createBrokerRecord(broker.id, query.profileId, {

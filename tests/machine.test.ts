@@ -1,4 +1,4 @@
-import { describe, test, expect } from "bun:test";
+import { describe, expect, test } from "bun:test";
 import { createActor } from "xstate";
 import { brokerMachine, stateToStatus } from "../src/state/machine.js";
 

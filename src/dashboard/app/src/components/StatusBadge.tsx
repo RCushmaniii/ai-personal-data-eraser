@@ -24,9 +24,5 @@ export function StatusBadge({ status }: StatusBadgeProps) {
 	const style = STATUS_STYLES[status] ?? "bg-gray-700 text-gray-300";
 	const label = status.replace(/_/g, " ");
 
-	return (
-		<span className={`inline-block px-2 py-0.5 rounded text-xs ${style}`}>
-			{label}
-		</span>
-	);
+	return <span className={`inline-block px-2 py-0.5 rounded text-xs ${style}`}>{label}</span>;
 }

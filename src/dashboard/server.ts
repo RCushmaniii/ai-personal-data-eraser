@@ -1,9 +1,9 @@
-import { Store } from "../state/store.js";
-import { getDatabase } from "../state/database.js";
-import { runMigrations } from "../state/migrate.js";
-import { getRegistry } from "../brokers/registry.js";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
+import { getRegistry } from "../brokers/registry.js";
+import { getDatabase } from "../state/database.js";
+import { runMigrations } from "../state/migrate.js";
+import { Store } from "../state/store.js";
 
 const PORT = Number(process.env.DASHBOARD_PORT) || 3847;
 const HOST = process.env.DASHBOARD_HOST || "127.0.0.1";
@@ -64,9 +64,14 @@ function handleApi(path: string, req: Request): Response {
 
 			case "/api/brokers": {
 				const records = store.listBrokerRecords();
-				const registry = getRegistry();
+				let registry: ReturnType<typeof getRegistry> | null = null;
+				try {
+					registry = getRegistry();
+				} catch {
+					// Registry may fail if playbooks are missing or invalid
+				}
 				const enriched = records.map((r) => {
-					const broker = registry.getBroker(r.brokerId);
+					const broker = registry?.getBroker(r.brokerId);
 					return {
 						...r,
 						name: broker?.name ?? r.brokerId,

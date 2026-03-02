@@ -6,3 +6,4 @@ export {
 	type PlaybookStep,
 	type PlaybookStepAction,
 } from "./playbook-schema.js";
+export { BrowserManager } from "./browser.js";

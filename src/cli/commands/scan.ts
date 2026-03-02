@@ -1,10 +1,10 @@
 import * as p from "@clack/prompts";
 import { ReconAgent } from "../../agents/recon.js";
-import { Store } from "../../state/store.js";
-import { Vault } from "../../security/vault.js";
-import { runMigrations } from "../../state/migrate.js";
-import { getDatabase } from "../../state/database.js";
 import { initConfig } from "../../config/index.js";
+import { Vault } from "../../security/vault.js";
+import { getDatabase } from "../../state/database.js";
+import { runMigrations } from "../../state/migrate.js";
+import { Store } from "../../state/store.js";
 import * as ui from "../ui.js";
 
 export async function scanCommand(): Promise<void> {
@@ -27,10 +27,8 @@ export async function scanCommand(): Promise<void> {
 			p.text({ message: "First name:", validate: (v) => (!v ? "Required" : undefined) }),
 		lastName: () =>
 			p.text({ message: "Last name:", validate: (v) => (!v ? "Required" : undefined) }),
-		state: () =>
-			p.text({ message: "State (optional):", placeholder: "e.g. CA" }),
-		city: () =>
-			p.text({ message: "City (optional):", placeholder: "e.g. Los Angeles" }),
+		state: () => p.text({ message: "State (optional):", placeholder: "e.g. CA" }),
+		city: () => p.text({ message: "City (optional):", placeholder: "e.g. Los Angeles" }),
 	});
 	if (p.isCancel(inputs)) return;
 

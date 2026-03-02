@@ -1,7 +1,7 @@
-import { describe, test, expect, beforeEach, afterEach } from "bun:test";
-import { Vault } from "../src/security/vault.js";
-import { rmSync, existsSync, mkdirSync } from "node:fs";
+import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { existsSync, rmSync } from "node:fs";
 import { join } from "node:path";
+import { Vault } from "../src/security/vault.js";
 
 const TEST_DIR = join(import.meta.dir, ".test-vault");
 const PASSWORD = "test-password-12345";

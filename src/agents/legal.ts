@@ -1,11 +1,10 @@
-import { BaseAgent } from "./base-agent.js";
-import { generateLegalRequest } from "../ai/response-parser.js";
-import { renderTemplate } from "../email/template-renderer.js";
-import { sendEmail } from "../email/sender.js";
-import { Store } from "../state/store.js";
-import { getRegistry } from "../brokers/registry.js";
 import { randomUUID } from "node:crypto";
+import { getRegistry } from "../brokers/registry.js";
+import { sendEmail } from "../email/sender.js";
+import { renderTemplate } from "../email/template-renderer.js";
+import { Store } from "../state/store.js";
 import type { AgentResult, EmailMessage, LegalFramework } from "../types/index.js";
+import { BaseAgent } from "./base-agent.js";
 
 /**
  * Legal Agent — generates and sends formal data deletion requests under CCPA/GDPR.
@@ -18,13 +17,7 @@ export class LegalAgent extends BaseAgent {
 	}
 
 	async execute(payload: Record<string, unknown>): Promise<AgentResult> {
-		const {
-			profileId,
-			senderName,
-			senderEmail,
-			framework,
-			piiFields,
-		} = payload as {
+		const { profileId, senderName, senderEmail, framework, piiFields } = payload as {
 			profileId: string;
 			senderName: string;
 			senderEmail: string;
@@ -36,7 +29,10 @@ export class LegalAgent extends BaseAgent {
 		const records = this.store.getBrokersByStatus("found");
 		const profileRecords = records.filter((r) => r.profileId === profileId);
 
-		this.logAction("legal_start", `Generating ${framework} requests for ${profileRecords.length} brokers`);
+		this.logAction(
+			"legal_start",
+			`Generating ${framework} requests for ${profileRecords.length} brokers`,
+		);
 
 		let sent = 0;
 
@@ -44,7 +40,12 @@ export class LegalAgent extends BaseAgent {
 			const broker = registry.getBroker(record.brokerId);
 			if (!broker) continue;
 
-			const templateType = framework === "ccpa" ? "ccpa_delete" : framework === "gdpr" ? "gdpr_delete" : "generic_optout";
+			const templateType =
+				framework === "ccpa"
+					? "ccpa_delete"
+					: framework === "gdpr"
+						? "gdpr_delete"
+						: "generic_optout";
 			const requestId = randomUUID().slice(0, 8).toUpperCase();
 			const deadline = new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
 

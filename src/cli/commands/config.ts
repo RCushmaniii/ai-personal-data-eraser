@@ -1,4 +1,3 @@
-import * as p from "@clack/prompts";
 import { existsSync, readFileSync } from "node:fs";
 import * as ui from "../ui.js";
 
@@ -24,7 +23,10 @@ export async function configCommand(): Promise<void> {
 		// Mask sensitive values
 		const sensitiveKeys = ["API_KEY", "PASS", "PASSWORD", "SECRET", "TOKEN"];
 		const isSensitive = sensitiveKeys.some((sk) => key.includes(sk));
-		const displayValue = isSensitive && value ? `${value.slice(0, 4)}${"*".repeat(Math.max(0, value.length - 4))}` : value || "(empty)";
+		const displayValue =
+			isSensitive && value
+				? `${value.slice(0, 4)}${"*".repeat(Math.max(0, value.length - 4))}`
+				: value || "(empty)";
 
 		console.log(`  ${key} = ${displayValue}`);
 	}

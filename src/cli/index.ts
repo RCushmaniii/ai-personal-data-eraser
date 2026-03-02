@@ -1,18 +1,15 @@
 #!/usr/bin/env bun
 import { Command } from "commander";
-import { setupCommand } from "./commands/setup.js";
-import { scanCommand } from "./commands/scan.js";
-import { removeCommand } from "./commands/remove.js";
-import { statusCommand } from "./commands/status.js";
-import { dashboardCommand } from "./commands/dashboard.js";
 import { configCommand } from "./commands/config.js";
+import { dashboardCommand } from "./commands/dashboard.js";
+import { removeCommand } from "./commands/remove.js";
+import { scanCommand } from "./commands/scan.js";
+import { setupCommand } from "./commands/setup.js";
+import { statusCommand } from "./commands/status.js";
 
 const program = new Command();
 
-program
-	.name("ai-eraser")
-	.description("AI-powered personal data removal engine")
-	.version("0.1.0");
+program.name("ai-eraser").description("AI-powered personal data removal engine").version("0.1.0");
 
 program
 	.command("setup")
@@ -39,9 +36,6 @@ program
 	.description("Launch the web-based monitoring dashboard")
 	.action(dashboardCommand);
 
-program
-	.command("config")
-	.description("View current configuration")
-	.action(configCommand);
+program.command("config").description("View current configuration").action(configCommand);
 
 program.parse();
