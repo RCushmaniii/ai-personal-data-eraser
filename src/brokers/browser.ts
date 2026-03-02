@@ -31,11 +31,11 @@ export class BrowserManager {
 	 */
 	async launch(headless = true): Promise<void> {
 		this.browser = await chromium.launch({
-			// Use full Chromium channel instead of chromium_headless_shell,
-			// which has DevTools pipe connection issues on Windows
-			channel: "chromium",
+			// Use system Edge on Windows — Playwright-bundled Chromium has
+			// DevTools pipe connection issues on Windows 11
+			channel: "msedge",
 			headless,
-			timeout: 30_000,
+			timeout: 60_000,
 			args: [
 				"--disable-blink-features=AutomationControlled",
 				"--no-first-run",
