@@ -47,6 +47,7 @@ export const appConfigSchema = z.object({
 	scheduler: schedulerConfigSchema.default({}),
 	dbPath: z.string().default("data/ai-eraser.db"),
 	logLevel: z.enum(["debug", "info", "warn", "error"]).default("info"),
+	firecrawlApiKey: z.string().optional(),
 });
 
 export type ValidatedConfig = z.infer<typeof appConfigSchema>;

@@ -19,6 +19,8 @@ export interface AppConfig {
 	dbPath: string;
 	/** Log level */
 	logLevel: "debug" | "info" | "warn" | "error";
+	/** Firecrawl API key for JS-rendered page scraping (optional) */
+	firecrawlApiKey?: string;
 }
 
 export interface SmtpConfig {

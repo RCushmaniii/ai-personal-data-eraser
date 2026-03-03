@@ -74,5 +74,6 @@ export function loadConfigFromEnv(): Partial<AppConfig> {
 		},
 		dbPath: process.env.DB_PATH ?? DEFAULT_CONFIG.dbPath,
 		logLevel: (process.env.LOG_LEVEL as AppConfig["logLevel"]) ?? DEFAULT_CONFIG.logLevel,
+		firecrawlApiKey: process.env.FIRECRAWL_API_KEY || undefined,
 	};
 }

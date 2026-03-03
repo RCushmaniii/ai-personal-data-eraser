@@ -1,6 +1,5 @@
 import * as p from "@clack/prompts";
 import { ResearchAgent } from "../../agents/research.js";
-import { BrowserManager } from "../../brokers/browser.js";
 import { initConfig } from "../../config/index.js";
 import { getDatabase } from "../../state/database.js";
 import { runMigrations } from "../../state/migrate.js";
@@ -60,75 +59,53 @@ export async function researchCommand(): Promise<void> {
 		category = catChoice as BrokerCategory;
 	}
 
-	// Headless mode
-	const headless = await p.confirm({
-		message: "Run headless? (no visible browser window)",
-		initialValue: true,
-	});
-	if (p.isCancel(headless)) return;
-
 	const s = p.spinner();
-	const browser = new BrowserManager();
 
-	try {
-		s.start("Launching browser...");
-		await browser.launch(headless);
-		const page = await browser.newPage();
-		s.stop("Browser ready");
+	s.start(
+		domain ? `Researching ${domain}...` : `Discovering ${category?.replace(/_/g, " ")} brokers...`,
+	);
 
-		s.start(
-			domain
-				? `Researching ${domain}...`
-				: `Discovering ${category?.replace(/_/g, " ")} brokers...`,
-		);
+	const agent = new ResearchAgent();
+	const result = await agent.run({ domain, category });
+	s.stop("Research complete");
 
-		const agent = new ResearchAgent(page);
-		const result = await agent.run({ domain, category });
-		s.stop("Research complete");
+	if (result.success) {
+		ui.success(result.message);
+	} else {
+		ui.error(result.message);
+	}
 
-		if (result.success) {
-			ui.success(result.message);
-		} else {
-			ui.error(result.message);
-		}
+	// Display results table
+	if (result.data) {
+		const results = result.data.results as {
+			domain: string;
+			name: string;
+			difficulty: string;
+			success: boolean;
+		}[];
 
-		// Display results table
-		if (result.data) {
-			const results = result.data.results as {
-				domain: string;
-				name: string;
-				difficulty: string;
-				success: boolean;
-			}[];
+		if (results.length > 0) {
+			console.log();
+			const store = new Store();
+			const rows = results
+				.filter((r) => r.success)
+				.map((r) => {
+					const intel = store.getBrokerIntel(r.domain);
+					return [
+						r.domain,
+						r.name,
+						r.difficulty,
+						intel?.optOutMethod ?? "-",
+						intel?.optOutUrl ?? "-",
+					];
+				});
 
-			if (results.length > 0) {
-				console.log();
-				const store = new Store();
-				const rows = results
-					.filter((r) => r.success)
-					.map((r) => {
-						const intel = store.getBrokerIntel(r.domain);
-						return [
-							r.domain,
-							r.name,
-							r.difficulty,
-							intel?.optOutMethod ?? "-",
-							intel?.optOutUrl ?? "-",
-						];
-					});
-
-				if (rows.length > 0) {
-					ui.table(rows, ["Domain", "Name", "Difficulty", "Method", "Opt-Out URL"]);
-				}
+			if (rows.length > 0) {
+				ui.table(rows, ["Domain", "Name", "Difficulty", "Method", "Opt-Out URL"]);
 			}
 		}
-
-		console.log();
-		p.outro("View results: bun run dashboard → Research page");
-	} catch (error) {
-		s.stop("Error");
-		ui.error(error instanceof Error ? error.message : String(error));
-	} finally {
-		await browser.close();
 	}
+
+	console.log();
+	p.outro("View results: bun run dashboard → Research page");
 }

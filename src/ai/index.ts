@@ -8,9 +8,12 @@ export {
 
 export { classifyResponse, generateLegalRequest } from "./response-parser.js";
 
+export { analyzeBrokerPage, type BrokerAnalysisResult } from "./broker-analyzer.js";
+
 export {
 	FORM_ANALYZER_SYSTEM,
 	RESPONSE_CLASSIFIER_SYSTEM,
 	SEARCH_RESULT_ANALYZER_SYSTEM,
 	LEGAL_REQUEST_SYSTEM,
+	BROKER_INTEL_ANALYZER_SYSTEM,
 } from "./prompts.js";
