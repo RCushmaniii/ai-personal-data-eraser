@@ -1,20 +1,20 @@
 import { z } from "zod";
 
 export const smtpConfigSchema = z.object({
-	host: z.string().min(1),
+	host: z.string().default(""),
 	port: z.number().int().positive().default(587),
 	secure: z.boolean().default(false),
-	user: z.string().min(1),
-	pass: z.string().min(1),
+	user: z.string().default(""),
+	pass: z.string().default(""),
 	fromName: z.string().default("AI Eraser"),
-	fromEmail: z.string().email(),
+	fromEmail: z.string().default(""),
 });
 
 export const imapConfigSchema = z.object({
-	host: z.string().min(1),
+	host: z.string().default(""),
 	port: z.number().int().positive().default(993),
-	user: z.string().min(1),
-	pass: z.string().min(1),
+	user: z.string().default(""),
+	pass: z.string().default(""),
 	folder: z.string().default("INBOX"),
 	pollInterval: z.number().int().positive().default(300),
 });
@@ -40,8 +40,8 @@ export const schedulerConfigSchema = z.object({
 export const appConfigSchema = z.object({
 	anthropicApiKey: z.string().min(1, "ANTHROPIC_API_KEY is required"),
 	model: z.string().default("claude-sonnet-4-20250514"),
-	smtp: smtpConfigSchema,
-	imap: imapConfigSchema,
+	smtp: smtpConfigSchema.default({}),
+	imap: imapConfigSchema.default({}),
 	vault: vaultConfigSchema.default({}),
 	dashboard: dashboardConfigSchema.default({}),
 	scheduler: schedulerConfigSchema.default({}),

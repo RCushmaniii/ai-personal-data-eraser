@@ -20,10 +20,15 @@ export async function researchCommand(): Promise<void> {
 	ui.header();
 	p.intro("Broker Intelligence — Research & Discovery");
 
+	// Config is required — research needs the Anthropic API key
 	try {
 		initConfig();
-	} catch {
-		// Config not required for research, but try to load it
+	} catch (error) {
+		ui.error(
+			`Configuration failed: ${error instanceof Error ? error.message : String(error)}`,
+		);
+		p.outro("Set ANTHROPIC_API_KEY in .env and try again.");
+		return;
 	}
 
 	const db = getDatabase();
@@ -87,9 +92,11 @@ export async function researchCommand(): Promise<void> {
 		if (results.length > 0) {
 			console.log();
 			const store = new Store();
-			const rows = results
-				.filter((r) => r.success)
-				.map((r) => {
+			const succeeded = results.filter((r) => r.success);
+			const failed = results.filter((r) => !r.success);
+
+			if (succeeded.length > 0) {
+				const rows = succeeded.map((r) => {
 					const intel = store.getBrokerIntel(r.domain);
 					return [
 						r.domain,
@@ -99,9 +106,24 @@ export async function researchCommand(): Promise<void> {
 						intel?.optOutUrl ?? "-",
 					];
 				});
-
-			if (rows.length > 0) {
 				ui.table(rows, ["Domain", "Name", "Difficulty", "Method", "Opt-Out URL"]);
+			}
+
+			if (failed.length > 0) {
+				console.log();
+				p.log.warn(`${failed.length} broker(s) failed:`);
+				for (const f of failed) {
+					p.log.message(`  ${f.domain}`);
+				}
+
+				// Surface error details from agent actions
+				const errorActions = agent.getActions().filter((a) => a.type === "research_error");
+				if (errorActions.length > 0) {
+					console.log();
+					for (const a of errorActions) {
+						p.log.error(a.description);
+					}
+				}
 			}
 		}
 	}
