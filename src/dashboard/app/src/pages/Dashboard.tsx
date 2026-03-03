@@ -24,7 +24,7 @@ export function DashboardPage() {
 	if (loading) {
 		return (
 			<div className="flex items-center justify-center h-64">
-				<div className="text-gray-500">Loading...</div>
+				<div className="text-text-muted">Loading...</div>
 			</div>
 		);
 	}
@@ -39,12 +39,12 @@ export function DashboardPage() {
 	};
 
 	const cards = [
-		{ label: "Total Brokers", value: stats.total, color: "text-gray-100" },
+		{ label: "Total Brokers", value: stats.total, color: "text-text-primary" },
 		{ label: "Data Found", value: stats.found, color: "text-yellow-400" },
 		{ label: "Opt-Out Sent", value: stats.optOutStarted, color: "text-cyan-400" },
 		{ label: "Removals Confirmed", value: stats.confirmed, color: "text-green-400" },
 		{ label: "Failed", value: stats.failed, color: "text-red-400" },
-		{ label: "Pending", value: stats.pending, color: "text-gray-400" },
+		{ label: "Pending", value: stats.pending, color: "text-text-secondary" },
 	];
 
 	return (
@@ -53,16 +53,16 @@ export function DashboardPage() {
 
 			<div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
 				{cards.map((card) => (
-					<div key={card.label} className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-						<p className="text-sm text-gray-500 mb-1">{card.label}</p>
+					<div key={card.label} className="bg-surface-raised border border-border rounded-xl p-5">
+						<p className="text-sm text-text-muted mb-1">{card.label}</p>
 						<p className={`text-3xl font-bold ${card.color}`}>{card.value}</p>
 					</div>
 				))}
 			</div>
 
-			<div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+			<div className="bg-surface-raised border border-border rounded-xl p-5">
 				<h3 className="font-semibold mb-3">Success Rate</h3>
-				<div className="h-4 bg-gray-800 rounded-full overflow-hidden">
+				<div className="h-4 bg-surface-overlay rounded-full overflow-hidden">
 					<div
 						className="h-full bg-green-500 rounded-full transition-all"
 						style={{
@@ -70,7 +70,7 @@ export function DashboardPage() {
 						}}
 					/>
 				</div>
-				<p className="text-sm text-gray-500 mt-2">
+				<p className="text-sm text-text-muted mt-2">
 					{stats.total > 0 ? ((stats.confirmed / stats.total) * 100).toFixed(1) : 0}% of brokers
 					have confirmed removal
 				</p>

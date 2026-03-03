@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { CheckIcon, XIcon } from "../components/Icons.tsx";
 import { StatusBadge } from "../components/StatusBadge.tsx";
 
 interface AuditEntry {
@@ -25,7 +26,7 @@ export function TasksPage() {
 	if (loading) {
 		return (
 			<div className="flex items-center justify-center h-64">
-				<div className="text-gray-500">Loading...</div>
+				<div className="text-text-muted">Loading...</div>
 			</div>
 		);
 	}
@@ -35,14 +36,14 @@ export function TasksPage() {
 			<h2 className="text-2xl font-bold mb-6">Audit Log</h2>
 
 			{entries.length === 0 ? (
-				<div className="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center">
-					<p className="text-gray-500">No audit entries yet.</p>
+				<div className="bg-surface-raised border border-border rounded-xl p-8 text-center">
+					<p className="text-text-muted">No audit entries yet.</p>
 				</div>
 			) : (
-				<div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+				<div className="bg-surface-raised border border-border rounded-xl overflow-hidden">
 					<table className="w-full text-sm">
 						<thead>
-							<tr className="border-b border-gray-800 text-gray-500 text-left">
+							<tr className="border-b border-border text-text-muted text-left">
 								<th className="px-4 py-3">Time</th>
 								<th className="px-4 py-3">Agent</th>
 								<th className="px-4 py-3">Action</th>
@@ -52,20 +53,25 @@ export function TasksPage() {
 						</thead>
 						<tbody>
 							{entries.map((entry) => (
-								<tr key={entry.id} className="border-b border-gray-800/50 hover:bg-gray-800/30">
-									<td className="px-4 py-3 text-gray-400 font-mono text-xs">
+								<tr
+									key={entry.id}
+									className="border-b border-border/50 hover:bg-surface-overlay/30 transition-colors"
+								>
+									<td className="px-4 py-3 text-text-secondary font-mono text-xs">
 										{entry.timestamp?.slice(0, 19).replace("T", " ")}
 									</td>
 									<td className="px-4 py-3">
 										<StatusBadge status={entry.agentType} />
 									</td>
-									<td className="px-4 py-3 text-gray-300">{entry.action}</td>
-									<td className="px-4 py-3 text-gray-400 max-w-xs truncate">{entry.details}</td>
+									<td className="px-4 py-3 text-text-secondary">{entry.action}</td>
+									<td className="px-4 py-3 text-text-secondary max-w-xs truncate">
+										{entry.details}
+									</td>
 									<td className="px-4 py-3">
 										{entry.success ? (
-											<span className="text-green-400">✓</span>
+											<CheckIcon className="w-4 h-4 text-green-400" />
 										) : (
-											<span className="text-red-400">✗</span>
+											<XIcon className="w-4 h-4 text-red-400" />
 										)}
 									</td>
 								</tr>

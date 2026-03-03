@@ -436,8 +436,14 @@ export class Store {
 		const byDifficulty: Record<string, number> = {};
 		const byCategory: Record<string, number> = {};
 		let withPlaybook = 0;
+		let fetchFailed = 0;
 
 		for (const intel of all) {
+			if (intel.status === "fetch_failed") {
+				fetchFailed++;
+				continue;
+			}
+
 			const diff = intel.difficulty ?? "unknown";
 			byDifficulty[diff] = (byDifficulty[diff] ?? 0) + 1;
 
@@ -447,7 +453,7 @@ export class Store {
 			if (intel.hasPlaybook) withPlaybook++;
 		}
 
-		return { total: all.length, byDifficulty, byCategory, withPlaybook };
+		return { total: all.length, byDifficulty, byCategory, withPlaybook, fetchFailed };
 	}
 
 	// --- Helpers ---

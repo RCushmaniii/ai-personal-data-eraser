@@ -106,6 +106,23 @@ export class ResearchAgent extends BaseAgent {
 
 			if (!homepage.text && !homepage.html) {
 				this.logAction("fetch_failed", `Could not fetch ${url}`, { domain: normalizedDomain });
+				const seedBroker = getAllSeedBrokers().find((b) => b.domain === normalizedDomain);
+				this.store.upsertBrokerIntel({
+					domain: normalizedDomain,
+					name: seedBroker?.name ?? normalizedDomain,
+					category: seedBroker?.category ?? "data_aggregator",
+					status: "fetch_failed",
+					notes: `Tier ${homepage.tier} fetch returned empty content for ${url}`,
+					sourceUrls: [url],
+					scrapedAt: new Date().toISOString(),
+				});
+				this.store.addAuditEntry(
+					"broker_fetch_failed",
+					"research",
+					`Fetch failed for ${seedBroker?.name ?? normalizedDomain} (${normalizedDomain}) — empty content`,
+					false,
+					normalizedDomain,
+				);
 				return {
 					domain: normalizedDomain,
 					name: normalizedDomain,
@@ -227,6 +244,23 @@ export class ResearchAgent extends BaseAgent {
 			this.logAction("research_error", `Failed to research ${normalizedDomain}: ${message}`, {
 				domain: normalizedDomain,
 			});
+			const seedBroker = getAllSeedBrokers().find((b) => b.domain === normalizedDomain);
+			this.store.upsertBrokerIntel({
+				domain: normalizedDomain,
+				name: seedBroker?.name ?? normalizedDomain,
+				category: seedBroker?.category ?? "data_aggregator",
+				status: "fetch_failed",
+				notes: `Research error: ${message}`,
+				sourceUrls: [url],
+				scrapedAt: new Date().toISOString(),
+			});
+			this.store.addAuditEntry(
+				"broker_fetch_failed",
+				"research",
+				`Research error for ${seedBroker?.name ?? normalizedDomain} (${normalizedDomain}): ${message}`,
+				false,
+				normalizedDomain,
+			);
 			return {
 				domain: normalizedDomain,
 				name: normalizedDomain,

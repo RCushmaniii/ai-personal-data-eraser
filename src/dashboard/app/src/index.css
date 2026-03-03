@@ -1,1 +1,39 @@
 @import "tailwindcss";
+
+/* --- Theme tokens --- */
+:root {
+	--surface: #030712;
+	--surface-raised: #111827;
+	--surface-overlay: #1f2937;
+	--border: #1f2937;
+	--text-primary: #f3f4f6;
+	--text-secondary: #9ca3af;
+	--text-muted: #6b7280;
+	--accent: #8b5cf6;
+	--accent-subtle: rgba(139, 92, 246, 0.15);
+}
+
+[data-theme="light"] {
+	--surface: #f9fafb;
+	--surface-raised: #ffffff;
+	--surface-overlay: #f3f4f6;
+	--border: #e5e7eb;
+	--text-primary: #111827;
+	--text-secondary: #4b5563;
+	--text-muted: #9ca3af;
+	--accent: #7c3aed;
+	--accent-subtle: rgba(124, 58, 237, 0.1);
+}
+
+/* --- Register as Tailwind utilities via @theme --- */
+@theme {
+	--color-surface: var(--surface);
+	--color-surface-raised: var(--surface-raised);
+	--color-surface-overlay: var(--surface-overlay);
+	--color-border: var(--border);
+	--color-text-primary: var(--text-primary);
+	--color-text-secondary: var(--text-secondary);
+	--color-text-muted: var(--text-muted);
+	--color-accent: var(--accent);
+	--color-accent-subtle: var(--accent-subtle);
+}

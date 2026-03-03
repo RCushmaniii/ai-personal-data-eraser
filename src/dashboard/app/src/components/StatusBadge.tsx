@@ -22,6 +22,7 @@ const STATUS_STYLES: Record<string, string> = {
 	researched: "bg-blue-900/50 text-blue-300",
 	verified: "bg-emerald-900/50 text-emerald-300",
 	playbook_drafted: "bg-violet-900/50 text-violet-300",
+	fetch_failed: "bg-amber-900/50 text-amber-300",
 };
 
 export function StatusBadge({ status }: StatusBadgeProps) {

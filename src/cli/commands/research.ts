@@ -24,9 +24,7 @@ export async function researchCommand(): Promise<void> {
 	try {
 		initConfig();
 	} catch (error) {
-		ui.error(
-			`Configuration failed: ${error instanceof Error ? error.message : String(error)}`,
-		);
+		ui.error(`Configuration failed: ${error instanceof Error ? error.message : String(error)}`);
 		p.outro("Set ANTHROPIC_API_KEY in .env and try again.");
 		return;
 	}

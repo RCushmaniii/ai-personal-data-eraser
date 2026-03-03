@@ -28,7 +28,7 @@ export function BrokersPage() {
 	if (loading) {
 		return (
 			<div className="flex items-center justify-center h-64">
-				<div className="text-gray-500">Loading...</div>
+				<div className="text-text-muted">Loading...</div>
 			</div>
 		);
 	}
@@ -37,10 +37,10 @@ export function BrokersPage() {
 		return (
 			<div>
 				<h2 className="text-2xl font-bold mb-6">Data Brokers</h2>
-				<div className="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center">
-					<p className="text-gray-500">No broker records yet.</p>
-					<p className="text-gray-600 text-sm mt-1">
-						Run <code className="text-violet-400">bun run dev scan</code> to discover your data.
+				<div className="bg-surface-raised border border-border rounded-xl p-8 text-center">
+					<p className="text-text-muted">No broker records yet.</p>
+					<p className="text-text-muted text-sm mt-1">
+						Run <code className="text-accent">bun run dev scan</code> to discover your data.
 					</p>
 				</div>
 			</div>
@@ -59,7 +59,7 @@ export function BrokersPage() {
 						status={broker.status}
 						matchConfidence={broker.matchConfidence}
 						attempts={broker.attempts}
-						lastUpdated={broker.updatedAt?.slice(0, 10) ?? "—"}
+						lastUpdated={broker.updatedAt?.slice(0, 10) ?? "\u2014"}
 						difficulty={broker.difficulty}
 					/>
 				))}

@@ -2,7 +2,7 @@
 
 import type { BrokerCategory, BrokerDifficulty, LegalFramework, OptOutMethod } from "./broker.js";
 
-export type BrokerIntelStatus = "researched" | "verified" | "playbook_drafted";
+export type BrokerIntelStatus = "researched" | "verified" | "playbook_drafted" | "fetch_failed";
 
 export interface BrokerIntel {
 	id: string;
@@ -55,6 +55,7 @@ export interface BrokerIntelSummary {
 	byDifficulty: Record<string, number>;
 	byCategory: Record<string, number>;
 	withPlaybook: number;
+	fetchFailed: number;
 }
 
 export interface BrokerIntelFilter {
