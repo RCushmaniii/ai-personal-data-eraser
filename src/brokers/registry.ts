@@ -17,8 +17,7 @@ export class BrokerRegistry {
 	 * Loads all playbooks from the given directory.
 	 */
 	loadPlaybooks(playbookDir?: string): void {
-		const dir =
-			playbookDir ?? resolveResource(resolve(import.meta.dir, "playbooks"), "playbooks");
+		const dir = playbookDir ?? resolveResource(resolve(import.meta.dir, "playbooks"), "playbooks");
 		const files = readdirSync(dir).filter((f) => f.endsWith(".yml") || f.endsWith(".yaml"));
 
 		for (const file of files) {

@@ -35,9 +35,7 @@ export class BrowserManager {
 			const pw = await import("playwright");
 			chromium = pw.chromium;
 		} catch {
-			throw new Error(
-				"Playwright not installed. Run: bunx playwright install chromium",
-			);
+			throw new Error("Playwright not installed. Run: bunx playwright install chromium");
 		}
 
 		this.browser = await chromium.launch({

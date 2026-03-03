@@ -17,11 +17,36 @@ interface Target {
 }
 
 const targets: Target[] = [
-	{ name: "ai-eraser-windows-x64", bunTarget: "bun-windows-x64", exe: "ai-eraser.exe", archiveExt: "zip" },
-	{ name: "ai-eraser-linux-x64", bunTarget: "bun-linux-x64", exe: "ai-eraser", archiveExt: "tar.gz" },
-	{ name: "ai-eraser-linux-arm64", bunTarget: "bun-linux-arm64", exe: "ai-eraser", archiveExt: "tar.gz" },
-	{ name: "ai-eraser-darwin-x64", bunTarget: "bun-darwin-x64", exe: "ai-eraser", archiveExt: "tar.gz" },
-	{ name: "ai-eraser-darwin-arm64", bunTarget: "bun-darwin-arm64", exe: "ai-eraser", archiveExt: "tar.gz" },
+	{
+		name: "ai-eraser-windows-x64",
+		bunTarget: "bun-windows-x64",
+		exe: "ai-eraser.exe",
+		archiveExt: "zip",
+	},
+	{
+		name: "ai-eraser-linux-x64",
+		bunTarget: "bun-linux-x64",
+		exe: "ai-eraser",
+		archiveExt: "tar.gz",
+	},
+	{
+		name: "ai-eraser-linux-arm64",
+		bunTarget: "bun-linux-arm64",
+		exe: "ai-eraser",
+		archiveExt: "tar.gz",
+	},
+	{
+		name: "ai-eraser-darwin-x64",
+		bunTarget: "bun-darwin-x64",
+		exe: "ai-eraser",
+		archiveExt: "tar.gz",
+	},
+	{
+		name: "ai-eraser-darwin-arm64",
+		bunTarget: "bun-darwin-arm64",
+		exe: "ai-eraser",
+		archiveExt: "tar.gz",
+	},
 ];
 
 const root = resolve(import.meta.dir, "..");

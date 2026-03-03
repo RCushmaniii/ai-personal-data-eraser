@@ -1,12 +1,15 @@
 #!/usr/bin/env bun
 import { Command } from "commander";
+import { campaignCommand } from "./commands/campaign.js";
 import { configCommand } from "./commands/config.js";
 import { dashboardCommand } from "./commands/dashboard.js";
 import { removeCommand } from "./commands/remove.js";
 import { researchCommand } from "./commands/research.js";
+import { resetCommand } from "./commands/reset.js";
 import { scanCommand } from "./commands/scan.js";
 import { setupCommand } from "./commands/setup.js";
 import { statusCommand } from "./commands/status.js";
+import { updateCommand } from "./commands/update.js";
 
 const program = new Command();
 
@@ -41,6 +44,18 @@ program
 	.command("research")
 	.description("Research data brokers — discover opt-out processes and difficulty")
 	.action(researchCommand);
+
+program
+	.command("campaign")
+	.description("Run the full removal pipeline — recon, removal, legal, monitor")
+	.action(campaignCommand);
+
+program.command("reset").description("Clear campaign data from the database").action(resetCommand);
+
+program
+	.command("update")
+	.description("Manually update a broker record's status")
+	.action(updateCommand);
 
 program.command("config").description("View current configuration").action(configCommand);
 

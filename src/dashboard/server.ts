@@ -4,6 +4,7 @@ import { getRegistry } from "../brokers/registry.js";
 import { getDatabase } from "../state/database.js";
 import { runMigrations } from "../state/migrate.js";
 import { Store } from "../state/store.js";
+import type { BrokerStatus } from "../types/index.js";
 import { resolveResource } from "../utils/resolve-resource.js";
 
 const PORT = Number(process.env.DASHBOARD_PORT) || 3847;
@@ -23,6 +24,26 @@ try {
 
 const staticDir = resolveResource(resolve(import.meta.dir, "app/dist"), "dashboard");
 
+const CORS_HEADERS = {
+	"Access-Control-Allow-Origin": "*",
+	"Access-Control-Allow-Methods": "GET, PATCH, OPTIONS",
+	"Access-Control-Allow-Headers": "Content-Type",
+};
+
+const VALID_STATUSES: BrokerStatus[] = [
+	"discovered",
+	"scanning",
+	"found",
+	"not_found",
+	"opt_out_started",
+	"opt_out_submitted",
+	"verification_needed",
+	"awaiting_confirmation",
+	"removal_confirmed",
+	"removal_failed",
+	"re_appeared",
+];
+
 const server = Bun.serve({
 	port: PORT,
 	hostname: HOST,
@@ -30,6 +51,11 @@ const server = Bun.serve({
 	async fetch(req) {
 		const url = new URL(req.url);
 		const path = url.pathname;
+
+		// CORS preflight
+		if (req.method === "OPTIONS") {
+			return new Response(null, { status: 204, headers: CORS_HEADERS });
+		}
 
 		// API routes
 		if (path.startsWith("/api/")) {
@@ -53,10 +79,61 @@ const server = Bun.serve({
 	},
 });
 
-function handleApi(path: string, req: Request): Response {
-	const headers = { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" };
+async function handleApi(path: string, req: Request): Promise<Response> {
+	const headers = { "Content-Type": "application/json", ...CORS_HEADERS };
 
 	try {
+		// Parameterized route: PATCH /api/brokers/:id/status
+		const brokerStatusMatch = path.match(/^\/api\/brokers\/([^/]+)\/status$/);
+		if (brokerStatusMatch) {
+			if (req.method !== "PATCH") {
+				return Response.json({ error: "Method not allowed. Use PATCH." }, { status: 405, headers });
+			}
+
+			const recordId = brokerStatusMatch[1];
+			const record = store.getBrokerRecord(recordId);
+			if (!record) {
+				return Response.json({ error: "Broker record not found" }, { status: 404, headers });
+			}
+
+			const body = (await req.json()) as { status?: string; notes?: string };
+
+			if (!body.status || !VALID_STATUSES.includes(body.status as BrokerStatus)) {
+				return Response.json(
+					{
+						error: `Invalid status. Valid values: ${VALID_STATUSES.join(", ")}`,
+					},
+					{ status: 400, headers },
+				);
+			}
+
+			const previousStatus = record.status;
+			store.updateBrokerStatus(recordId, body.status as BrokerStatus, body.notes);
+			store.addAuditEntry(
+				"api_status_update",
+				"dashboard",
+				JSON.stringify({
+					brokerId: record.brokerId,
+					before: previousStatus,
+					after: body.status,
+					notes: body.notes,
+				}),
+				true,
+				record.brokerId,
+				record.profileId,
+			);
+
+			return Response.json(
+				{
+					success: true,
+					id: recordId,
+					previousStatus,
+					newStatus: body.status,
+				},
+				{ headers },
+			);
+		}
+
 		switch (path) {
 			case "/api/summary": {
 				const summary = store.getCampaignSummary();

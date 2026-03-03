@@ -456,6 +456,78 @@ export class Store {
 		return { total: all.length, byDifficulty, byCategory, withPlaybook, fetchFailed };
 	}
 
+	// --- Data Cleanup ---
+
+	clearBrokerRecords(): number {
+		const result = this.db.query("DELETE FROM broker_records").run();
+		return result.changes;
+	}
+
+	clearProfiles(): number {
+		this.clearBrokerRecords(); // FK: broker_records.profile_id → profiles.id
+		const result = this.db.query("DELETE FROM profiles").run();
+		return result.changes;
+	}
+
+	clearAuditLog(): number {
+		const result = this.db.query("DELETE FROM audit_log").run();
+		return result.changes;
+	}
+
+	clearAgentTasks(): number {
+		const result = this.db.query("DELETE FROM agent_tasks").run();
+		return result.changes;
+	}
+
+	clearBrokerIntel(): number {
+		const result = this.db.query("DELETE FROM broker_intel").run();
+		return result.changes;
+	}
+
+	clearEmails(): number {
+		const result = this.db.query("DELETE FROM emails").run();
+		return result.changes;
+	}
+
+	/** Deletes all data from all tables in FK-safe order. */
+	clearAll(): void {
+		this.db.query("DELETE FROM broker_records").run();
+		this.db.query("DELETE FROM agent_tasks").run();
+		this.db.query("DELETE FROM audit_log").run();
+		this.db.query("DELETE FROM emails").run();
+		this.db.query("DELETE FROM broker_intel").run();
+		this.db.query("DELETE FROM profiles").run();
+	}
+
+	/** Deletes all campaign data but preserves broker_intel (research). */
+	clearCampaignData(): void {
+		this.db.query("DELETE FROM broker_records").run();
+		this.db.query("DELETE FROM agent_tasks").run();
+		this.db.query("DELETE FROM audit_log").run();
+		this.db.query("DELETE FROM emails").run();
+		this.db.query("DELETE FROM profiles").run();
+	}
+
+	/** Returns row counts for all tables. */
+	getDataCounts(): Record<string, number> {
+		const tables = [
+			"profiles",
+			"broker_records",
+			"agent_tasks",
+			"audit_log",
+			"emails",
+			"broker_intel",
+		];
+		const counts: Record<string, number> = {};
+		for (const table of tables) {
+			const row = this.db
+				.query<{ count: number }, []>(`SELECT COUNT(*) as count FROM ${table}`)
+				.get();
+			counts[table] = row?.count ?? 0;
+		}
+		return counts;
+	}
+
 	// --- Helpers ---
 
 	private mapBrokerRecord(row: Record<string, string | number | null>): BrokerRecord {
