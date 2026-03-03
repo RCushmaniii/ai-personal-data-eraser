@@ -41,7 +41,7 @@ export const DEFAULT_CONFIG: Partial<AppConfig> = {
 export function loadConfigFromEnv(): Partial<AppConfig> {
 	return {
 		anthropicApiKey: process.env.ANTHROPIC_API_KEY ?? "",
-		model: process.env.AI_MODEL ?? DEFAULT_CONFIG.model,
+		model: process.env.ANTHROPIC_MODEL ?? DEFAULT_CONFIG.model,
 		smtp: {
 			host: process.env.SMTP_HOST ?? DEFAULT_CONFIG.smtp!.host,
 			port: Number(process.env.SMTP_PORT) || DEFAULT_CONFIG.smtp!.port,

@@ -1,6 +1,6 @@
 /**
  * Claude-powered broker page analysis.
- * Uses Haiku for cost efficiency (~$0.001 per broker).
+ * Model determined by ANTHROPIC_MODEL env var (defaults to Sonnet).
  * Follows the same lazy singleton pattern as form-analyzer.ts.
  */
 
@@ -54,13 +54,14 @@ export async function analyzeBrokerPage(
 	pageUrl: string,
 ): Promise<BrokerAnalysisResult> {
 	const client = getClient();
+	const config = getConfig();
 
 	// Truncate content to stay within token limits
 	const maxLength = contentFormat === "html" ? MAX_HTML_LENGTH : MAX_MARKDOWN_LENGTH;
 	const truncated = pageContent.slice(0, maxLength);
 
 	const response = await client.messages.create({
-		model: "claude-haiku-4-5-20251001",
+		model: config.model,
 		max_tokens: 2048,
 		system: BROKER_INTEL_ANALYZER_SYSTEM,
 		messages: [
