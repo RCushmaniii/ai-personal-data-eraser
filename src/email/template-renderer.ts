@@ -2,8 +2,9 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import mjml2html from "mjml";
 import type { EmailTemplateData, EmailTemplateType } from "../types/index.js";
+import { resolveResource } from "../utils/resolve-resource.js";
 
-const TEMPLATE_DIR = resolve(import.meta.dir, "templates");
+const TEMPLATE_DIR = resolveResource(resolve(import.meta.dir, "templates"), "templates");
 
 /**
  * Renders an MJML email template with the given data.

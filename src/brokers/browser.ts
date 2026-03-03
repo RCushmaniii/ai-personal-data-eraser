@@ -1,4 +1,4 @@
-import { type Browser, type BrowserContext, type Page, chromium } from "playwright";
+import type { Browser, BrowserContext, Page } from "playwright";
 
 const USER_AGENTS = [
 	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
@@ -30,6 +30,16 @@ export class BrowserManager {
 	 * Launch Chromium with anti-detection settings.
 	 */
 	async launch(headless = true): Promise<void> {
+		let chromium: typeof import("playwright").chromium;
+		try {
+			const pw = await import("playwright");
+			chromium = pw.chromium;
+		} catch {
+			throw new Error(
+				"Playwright not installed. Run: bunx playwright install chromium",
+			);
+		}
+
 		this.browser = await chromium.launch({
 			// Use system Edge on Windows — Playwright-bundled Chromium has
 			// DevTools pipe connection issues on Windows 11

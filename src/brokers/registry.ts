@@ -2,6 +2,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import YAML from "yaml";
 import type { BrokerDefinition } from "../types/index.js";
+import { resolveResource } from "../utils/resolve-resource.js";
 import { type Playbook, playbookSchema } from "./playbook-schema.js";
 
 /**
@@ -16,7 +17,8 @@ export class BrokerRegistry {
 	 * Loads all playbooks from the given directory.
 	 */
 	loadPlaybooks(playbookDir?: string): void {
-		const dir = playbookDir ?? resolve(import.meta.dir, "playbooks");
+		const dir =
+			playbookDir ?? resolveResource(resolve(import.meta.dir, "playbooks"), "playbooks");
 		const files = readdirSync(dir).filter((f) => f.endsWith(".yml") || f.endsWith(".yaml"));
 
 		for (const file of files) {

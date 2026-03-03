@@ -12,6 +12,9 @@
 	"scripts": {
 		"dev": "bun run src/cli/index.ts",
 		"build": "bun build src/cli/index.ts --outdir dist --target bun",
+		"build:dashboard": "cd src/dashboard/app && bun install && bun run build",
+		"build:binary": "bun run build:dashboard && bun build ./src/cli/index.ts --compile --minify --outfile dist/ai-eraser",
+		"build:all": "bun run scripts/build-all-platforms.ts",
 		"typecheck": "tsc --noEmit",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",

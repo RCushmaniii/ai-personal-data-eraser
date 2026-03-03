@@ -1,5 +1,6 @@
 import { writeFileSync } from "node:fs";
 import * as p from "@clack/prompts";
+import { loadConfigFromEnv } from "../../config/defaults.js";
 import { Vault } from "../../security/vault.js";
 import { getDatabase } from "../../state/database.js";
 import { runMigrations } from "../../state/migrate.js";
@@ -105,7 +106,7 @@ export async function setupCommand(): Promise<void> {
 
 	// Step 6: Initialize vault
 	s.start("Initializing encrypted vault...");
-	const vault = new Vault("data/vault");
+	const vault = new Vault(loadConfigFromEnv().vault?.dataDir ?? "data/vault");
 	await vault.unlock(vaultPassword);
 	vault.lock();
 	s.stop("Vault initialized");

@@ -6,12 +6,9 @@ on:
       - "v*"
 
 jobs:
-  release:
-    name: Build & Release
+  check:
+    name: Lint, Typecheck & Test
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
       - uses: actions/checkout@v4
 
@@ -25,20 +22,130 @@ jobs:
       - name: Type check
         run: bun run typecheck
 
+      - name: Lint
+        run: bun run lint
+
       - name: Run tests
         run: bun test
 
-      - name: Build CLI
-        run: bun run build
+  build-binaries:
+    name: Build ${{ matrix.target }}
+    needs: check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - target: bun-windows-x64
+            name: ai-eraser-windows-x64
+            exe: ai-eraser.exe
+            archive: ai-eraser-windows-x64.zip
+          - target: bun-linux-x64
+            name: ai-eraser-linux-x64
+            exe: ai-eraser
+            archive: ai-eraser-linux-x64.tar.gz
+          - target: bun-linux-arm64
+            name: ai-eraser-linux-arm64
+            exe: ai-eraser
+            archive: ai-eraser-linux-arm64.tar.gz
+          - target: bun-darwin-x64
+            name: ai-eraser-darwin-x64
+            exe: ai-eraser
+            archive: ai-eraser-darwin-x64.tar.gz
+          - target: bun-darwin-arm64
+            name: ai-eraser-darwin-arm64
+            exe: ai-eraser
+            archive: ai-eraser-darwin-arm64.tar.gz
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
       - name: Build dashboard
+        run: bun run build:dashboard
+
+      - name: Compile binary
         run: |
-          cd src/dashboard/app
-          bun install
-          bun run build
+          mkdir -p dist/${{ matrix.name }}
+          bun build ./src/cli/index.ts --compile --minify \
+            --target=${{ matrix.target }} \
+            --outfile dist/${{ matrix.name }}/${{ matrix.exe }}
+
+      - name: Copy resources
+        run: |
+          mkdir -p dist/${{ matrix.name }}/resources
+          cp -r src/brokers/playbooks dist/${{ matrix.name }}/resources/playbooks
+          cp -r src/email/templates dist/${{ matrix.name }}/resources/templates
+          cp -r src/dashboard/app/dist dist/${{ matrix.name }}/resources/dashboard
+          cp .env.example dist/${{ matrix.name }}/.env.example
+
+      - name: Package (zip)
+        if: contains(matrix.archive, '.zip')
+        run: cd dist && zip -r ${{ matrix.archive }} ${{ matrix.name }}/
+
+      - name: Package (tar.gz)
+        if: contains(matrix.archive, '.tar.gz')
+        run: cd dist && tar -czf ${{ matrix.archive }} ${{ matrix.name }}/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: dist/${{ matrix.archive }}
+
+  build-docker:
+    name: Build & Push Docker Image
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/rcushmaniii/ai-eraser:${{ steps.version.outputs.version }}
+            ghcr.io/rcushmaniii/ai-eraser:latest
+
+  release:
+    name: Create GitHub Release
+    needs: [build-binaries, build-docker]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
 
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          files: dist/*
+          files: artifacts/**/*

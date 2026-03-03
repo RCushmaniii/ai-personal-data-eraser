@@ -4,6 +4,7 @@ import { getRegistry } from "../brokers/registry.js";
 import { getDatabase } from "../state/database.js";
 import { runMigrations } from "../state/migrate.js";
 import { Store } from "../state/store.js";
+import { resolveResource } from "../utils/resolve-resource.js";
 
 const PORT = Number(process.env.DASHBOARD_PORT) || 3847;
 const HOST = process.env.DASHBOARD_HOST || "127.0.0.1";
@@ -20,7 +21,7 @@ try {
 	// Registry may fail if playbooks directory doesn't exist yet
 }
 
-const staticDir = resolve(import.meta.dir, "app/dist");
+const staticDir = resolveResource(resolve(import.meta.dir, "app/dist"), "dashboard");
 
 const server = Bun.serve({
 	port: PORT,

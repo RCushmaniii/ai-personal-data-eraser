@@ -1,6 +1,6 @@
 import * as p from "@clack/prompts";
 import { ReconAgent } from "../../agents/recon.js";
-import { initConfig } from "../../config/index.js";
+import { getConfig, initConfig } from "../../config/index.js";
 import { Vault } from "../../security/vault.js";
 import { getDatabase } from "../../state/database.js";
 import { runMigrations } from "../../state/migrate.js";
@@ -41,7 +41,7 @@ export async function scanCommand(): Promise<void> {
 	const s = p.spinner();
 	s.start("Encrypting your data...");
 
-	const vault = new Vault("data/vault");
+	const vault = new Vault(getConfig().vault.dataDir);
 	await vault.unlock(vaultPassword);
 	const profileData = JSON.stringify(inputs);
 	const store = new Store();

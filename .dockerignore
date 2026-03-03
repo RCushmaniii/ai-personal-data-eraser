@@ -1,0 +1,15 @@
+node_modules/
+src/dashboard/app/node_modules/
+src/dashboard/app/dist/
+dist/
+.git/
+.github/
+data/
+*.db
+*.db-wal
+*.db-shm
+.env
+tests/
+coverage/
+*.md
+!README.md
