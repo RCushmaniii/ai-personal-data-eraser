@@ -2,9 +2,9 @@
 # =============================================================================
 # PORTFOLIO.md — ai-eraser
 # =============================================================================
-portfolio_enabled: true
+portfolio_enabled: false
 portfolio_priority: 3
-portfolio_featured: true
+portfolio_featured: false
 portfolio_last_reviewed: "2026-03-02"
 
 title: "ai-eraser — AI-Powered Data Removal Engine"
